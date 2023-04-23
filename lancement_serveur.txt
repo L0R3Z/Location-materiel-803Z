@@ -1,0 +1,5 @@
+Entrer dans l'environnement virtuel
+> venv\Scripts\activate
+
+Puis lancer le serveur
+> flask run
