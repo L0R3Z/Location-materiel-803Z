@@ -1,44 +1,55 @@
+# Could maybe use Flask-Swagger later to automatically generate the API documentation
 from flask import Flask,request,render_template,jsonify,abort
 from flask_cors import CORS
-import mysql.connector
-from database import create_tables
+from database import connect_db, create_tables, insert_basic_datas
 
-#######################
-# CONNECT TO DATABASE #
-#######################
+# Connect to database
+mydb = connect_db()
 
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",
-    database="803z"
-)
-
+# Create database cursor
 mycursor = mydb.cursor()
 
-create_tables(mydb, mycursor)
+# Check if the tables should be created and if the sample data should be inserted by checking if the Admin table exists
+# Saves performance by avoiding otherwise unnecessary requests
+mycursor.execute('''SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name = 'Admin') AS table_exists;''')
+isDatabaseCreated = (mycursor.fetchone())[0]
+if isDatabaseCreated == 0:
+    print("Creation and filling of tables with sample data...")
+    create_tables(mydb, mycursor)
+    insert_basic_datas(mydb, mycursor)
+    
+insert_basic_datas(mydb, mycursor)
 
-mycursor.execute('''select * from Contacts''')
-contacts = mycursor.fetchall()
-print(contacts)
-
-print('-------------------')
-mycursor.execute('''select * from Contacts''')
-print(mycursor.fetchone())
-
-for contacts in mycursor:
-    print(contacts)
-
+# Close database cursor
+# Keeping the cursor open for an extended period of time can tie up database resources and potentially cause issues for other connections
 mycursor.close()
 
+# Start the Flask application
 app = Flask(__name__)
 CORS(app)
 
-print("hello world!")
-
+# Index route
 @app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+def accueil():
+    return render_template('accueil.html')
 
+@app.route("/admin/")
+def admin():
+    return render_template('admin.html')
+
+@app.route("/admin/tryconnection/", methods=['GET', 'POST'])
+def admin_tryconnection():
+    data = request.json
+    username = data["username"]
+    passwd = data["passwd"]
+    # A modifier pour aller check dans la BDD si une correspondance pseudo/mdp de la sorte existe
+    # Si oui, on autorise la connexion
+    if(username == "admin" and passwd == "admin"):
+        return '1'
+    else:
+        return '0'
+
+# Run debug mode
+# Useful for development, but to be removed for the production version
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
