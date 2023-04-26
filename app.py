@@ -1,7 +1,10 @@
 # Could maybe use Flask-Swagger later to automatically generate the API documentation
-from flask import Flask,request,render_template,jsonify,abort
+from flask import Flask, request, render_template, jsonify, abort, session, redirect, url_for
 from flask_cors import CORS
 from database import connect_db, create_tables, insert_basic_datas
+from admin import admin
+
+
 
 # Connect to database
 mydb = connect_db()
@@ -24,32 +27,29 @@ insert_basic_datas(mydb, mycursor)
 # Keeping the cursor open for an extended period of time can tie up database resources and potentially cause issues for other connections
 mycursor.close()
 
+
+
 # Start the Flask application
 app = Flask(__name__)
+app.secret_key = "123456789" # Set a secret key to ensure that the session data is enabled and secure
+app.config['mydb'] = mydb
 CORS(app)
+
+
 
 # Index route
 @app.route("/")
 def accueil():
-    return render_template('accueil.html')
+    return render_template("accueil.html")
 
-@app.route("/admin/")
-def admin():
-    return render_template('admin.html')
 
-@app.route("/admin/tryconnection/", methods=['GET', 'POST'])
-def admin_tryconnection():
-    data = request.json
-    username = data["username"]
-    passwd = data["passwd"]
-    # A modifier pour aller check dans la BDD si une correspondance pseudo/mdp de la sorte existe
-    # Si oui, on autorise la connexion
-    if(username == "admin" and passwd == "admin"):
-        return '1'
-    else:
-        return '0'
 
-# Run debug mode
+# Import blueprint routes from another file
+app.register_blueprint(admin, url_prefix="/admin")
+
+
+
+# Run app in debug mode
 # Useful for development, but to be removed for the production version
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
