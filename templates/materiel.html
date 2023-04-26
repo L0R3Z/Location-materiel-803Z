@@ -22,12 +22,16 @@
                     <th>Quantite</th>
                     <th>Image</th>
                     <th>Remarque</th>
-                    <!-- <th>Emprunté jusqu'au...</th> -->
+                    <th>Emprunté jusqu'au...</th>
                 </tr>
             </thead>
             <tbody>
                 {% for materiel in materiel_list %}
-                    <tr>
+                    {% if materiel.disponible %}
+                        <tr style="background-color: green;">
+                    {% else %}
+                        <tr style="background-color: red;">
+                    {% endif %}
                         <td>{{ materiel.type }}</td>
                         <td>{{ materiel.modele }}</td>
                         <td>{{ materiel.description }}</td>
@@ -40,7 +44,12 @@
                             {% endif %}
                         </td>
                         <td>{{ materiel.remarque }}</td>
-                        <td></td>
+                        <td>
+                            {% if materiel.date_retour %}
+                                {{ materiel.date_retour }}            
+                            {% endif %}
+                        </td>
+                        
                     </tr>
                 {% endfor %}
             </tbody>

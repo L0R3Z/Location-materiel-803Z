@@ -104,7 +104,7 @@ def insert_basic_datas(mydb, mycursor):
     # Using Flask placeholders prevents SQL injection attacks by automatically sanitizing and escaping the values
     tempQuery = '''INSERT INTO Admin(pseudo, mdp, superuser) VALUES
         ("admin", %s, 1),
-        ("john_doe", %s, 0)
+        ("john_doe", %s, 0);
         '''
     mycursor.execute(tempQuery, (encrypted_passwd_admin, encrypted_passwd_john))
     mydb.commit()
@@ -114,11 +114,29 @@ def insert_basic_datas(mydb, mycursor):
         ("camera", "Canon cramptes 13", "contre focale triple 57mm", 1, "", "inutilisable"),
         ("trepied", "Trepied 2000", "18m 4 pieds etc.", 1, "https://www.europe-nature-optik.fr/884-tm_thickbox_default/kite-trepied-ardea-cf-avec-rotule-manfrotto-128rc.jpg", ""),
         ("camera", "Canon apagn 8", "focale double 14mm avec lampe frontale", 2, "", ""),
-        ("micro", "micro pro 1234", "il est vrmt bien", 0, "", ""),
+        ("micro", "micro pro 1234", "il est vrmt bien", 0, "", "");
         ''')
     mydb.commit()
-
-
+    
+    # Insert sample values in Reservations
+    mycursor.execute('''INSERT INTO Reservations(date_debut, date_fin, sortie, date_restitution, retour_complet, retour_incomplet) VALUES
+        ("2022-09-30", "2022-10-05", 1, "2022-10-07", 1, 0),
+        ("2023-04-24", "2023-12-04", 1, null, 0, 0),
+        ("2023-04-25", "2023-04-27", 1, "2023-04-26", 0, 1),
+        ("2023-04-26", "2024-01-04", 0, null, 0, 0);
+        ''')
+    mydb.commit()
+    
+    # Insert sample values in Reservations_Materiel
+    mycursor.execute('''INSERT INTO Reservations_Materiel(id_reservation, id_materiel, rendu, manquant, defaut) VALUES
+        (1, 2, 1, 0, 0),
+        (1, 3, 1, 0, 0),
+        (2, 2, 1, 0, 0),
+        (3, 1, 0, 1, 0),
+        (3, 4, 1, 0, 1),
+        (4, 2, 0, 0, 0);
+        ''')
+    mydb.commit()
 
 # mycursor.execute('''select * from Contacts''')
 # contacts = mycursor.fetchall()
