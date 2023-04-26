@@ -16,7 +16,7 @@ def connect_db():
         host = db_config["host"],
         user = db_config["user"],
         password = db_config["passwd"],
-        database = db_config["name"]
+        database = db_config["name"],
     )
 
 # Close the connection to the database (for when the app shuts down)
@@ -112,11 +112,11 @@ def insert_basic_datas(mydb, mycursor):
     # Insert sample values in Materiel
     mycursor.execute('''INSERT INTO Materiel(type, modele, description, quantite, image, remarque) VALUES
         ("camera", "Canon cramptes 13", "contre focale triple 57mm", 1, "", "inutilisable"),
+        ("trepied", "Trepied 2000", "18m 4 pieds etc.", 1, "https://www.europe-nature-optik.fr/884-tm_thickbox_default/kite-trepied-ardea-cf-avec-rotule-manfrotto-128rc.jpg", ""),
         ("camera", "Canon apagn 8", "focale double 14mm avec lampe frontale", 2, "", ""),
-        ("micro", "micro pro 1234", "il est vrmt bien", 0, "", "")
+        ("micro", "micro pro 1234", "il est vrmt bien", 0, "", ""),
         ''')
     mydb.commit()
-
 
 
 

@@ -3,6 +3,7 @@ from flask import Flask, request, render_template, jsonify, abort, session, redi
 from flask_cors import CORS
 from database import connect_db, create_tables, insert_basic_datas
 from admin import admin
+from materiel import materiel
 
 
 
@@ -20,9 +21,12 @@ if isDatabaseCreated == 0:
     print("Creation and filling of tables with sample data...")
     create_tables(mydb, mycursor)
     insert_basic_datas(mydb, mycursor)
-    
-insert_basic_datas(mydb, mycursor)
 
+# In case I want to insert random values into the database...
+# mycursor.execute('''INSERT INTO Materiel(type, modele, description, quantite, image, remarque) VALUES
+#     ("trepied", "Trepied 2000", "18m 4 pieds etc.", 1, "https://www.europe-nature-optik.fr/884-tm_thickbox_default/kite-trepied-ardea-cf-avec-rotule-manfrotto-128rc.jpg", "")''')
+# mydb.commit()
+    
 # Close database cursor
 # Keeping the cursor open for an extended period of time can tie up database resources and potentially cause issues for other connections
 mycursor.close()
@@ -42,10 +46,9 @@ CORS(app)
 def accueil():
     return render_template("accueil.html")
 
-
-
 # Import blueprint routes from another file
 app.register_blueprint(admin, url_prefix="/admin")
+app.register_blueprint(materiel, url_prefix="/materiel")
 
 
 

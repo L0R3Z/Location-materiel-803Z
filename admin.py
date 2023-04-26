@@ -25,8 +25,6 @@ def admin_tryconnection():
     data = request.json
     username = data["username"]
     passwd = encrypt_password(data["passwd"])
-    # A modifier pour aller check dans la BDD si une correspondance pseudo/mdp de la sorte existe
-    # Si oui, on autorise la connexion
     isValid = check_admin_username_passwd(username, passwd)
     if isValid:
         # Set the admin_id inside the session, to prove that the admin is connected
