@@ -52,9 +52,28 @@
                 {% endfor %}
             </tbody>
         </table>
-        <div class="reserv_div hidden">
-            <p>Faire une réservation de matériel</p>
-            <button id="lancer_reservation">Lancer la réservation</button>
-        </div>
     {% endif %}
 </div>
+
+<script>
+    // DOM Elements
+    const reservCheckbox = document.querySelectorAll(".reserv_checkbox");
+
+    // To do when clicking on a checkbox
+    function checkboxHandler() {
+        // If at least one checkbox is checked, display the reservDiv containing the reservation button
+        isChecked = (Array.from(reservCheckbox)).some(checkbox => {
+            return checkbox.checked;
+        });
+
+        if(isChecked) reservDiv.classList.remove("hidden");
+        else reservDiv.classList.add("hidden");
+    }
+
+    function getAllMateriel() {
+        // Get the database id of the materiel reserved
+        return (Array.from(reservCheckbox)).map(checkbox => checkbox.id);
+    }
+    
+    reservCheckbox.forEach(checkbox => {checkbox.addEventListener("click", checkboxHandler)});
+</script>

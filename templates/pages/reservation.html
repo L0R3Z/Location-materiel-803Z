@@ -4,37 +4,55 @@
     <div class="materiel">
         {% include "./pages/reservation/materiel.html" %}
     </div>
+    <div class="dates">
+        {% include "./pages/reservation/dates.html" %}
+    </div>
+    <div class="contacts">
+        {% include "./pages/reservation/contacts.html" %}
+    </div>
+    <div class="projet">
+        {% include "./pages/reservation/projet.html" %}
+    </div>
 
-    <div class="materiel">
-
+    <div class="reserv_div hidden">
+        <p>Faire une réservation de matériel</p>
+        <button id="lancer_reservation">Lancer la réservation</button>
     </div>
 
     <script>
         // DOM Elements
-        const reservCheckbox = document.querySelectorAll(".reserv_checkbox");
         const reservDiv = document.querySelector(".reserv_div");
         const reservButton = document.querySelector("#lancer_reservation");
-        
-        // To do when clicking on a checkbox
-        function checkboxHandler() {
-            // If at least one checkbox is checked, display the reservDiv containing the reservation button
-            isChecked = (Array.from(reservCheckbox)).some(checkbox => {
-                return checkbox.checked;
-            });
-
-            if(isChecked) reservDiv.classList.remove("hidden");
-            else reservDiv.classList.add("hidden");
-        }
 
         // To do when clicking on the reservation button
-        function reservButtonHandler() {
-            // Get the database id of the materiel reserved
-            materielIds = (Array.from(reservCheckbox)).map(checkbox => checkbox.id);
+        async function reservButtonHandler() {
+            materiel = getAllMateriel();
+            dates = getDates();
+            contacts = getAllContacts();
+            projet = getProjet();
+            reservationData = {
+                "materiel": materiel,
+                "dates": dates,
+                "contacts": contacts,
+                "projet": projet
+            }
 
-            // Call a flask route to 
+            console.log(reservationData);
+
+            // Give the reservation data to the back
+            const response = await fetch("/reservation/makereservation", {
+                method: 'POST',
+                headers: {'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(reservationData)
+            });
+            const data = await response.json();
+
+            console.log(data);
         }
 
         // Listeners
-        reservCheckbox.forEach(checkbox => {checkbox.addEventListener("click", checkboxHandler)});
+        reservButton.addEventListener("click", reservButtonHandler);
     </script>
 {% endblock %}

@@ -1,0 +1,34 @@
+<div class="projet__container">
+    <h3>Projet (facultatif)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Participants</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" name="nom" id="projetnom"></td>
+                <td><input type="text" name="description" id="projetdescription"></td>
+                <td><input type="text" name="participants" id="projetparticipants"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // DOM Elements
+    inputProjetNom = document.querySelector("#projetnom");
+    inputProjetDesc = document.querySelector("#projetdescription");
+    inputProjetParticipants = document.querySelector("#projetparticipants");
+
+    function getProjet() {
+        return {
+            nom: inputProjetNom.value,
+            description: inputProjetDesc.value,
+            participants: inputProjetParticipants.value
+        };
+    }
+</script>

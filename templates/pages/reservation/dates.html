@@ -1,0 +1,30 @@
+<div class="contacts__container">
+    <h3>Dates</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Début</th>
+                <th>Fin</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="date" name="debut" id="inputdebut"></td>
+                <td><input type="date" name="fin" id="inputfin"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // DOM Elements
+    inputDebut = document.querySelector("#inputdebut");
+    inputFin = document.querySelector("#inputfin");
+
+    function getDates() {
+        return {
+            debut: inputDebut.value,
+            fin: inputFin.value
+        };
+    }
+</script>

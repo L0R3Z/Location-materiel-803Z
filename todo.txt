@@ -1,11 +1,15 @@
+- Error handling
+    - Bien vérifier les types des données avant de lancer les requêtes
+    - Bien vérifier la longueur
+
 - Partie utilisateur
     - Ajouter des filtres de recherche pour le matériel (en fonction du type et de la dispo...)
     - Pouvoir faire une réservation de matériel (onepage)
-        - [CHECKED] Sélectionner du matériel depuis la liste
+        [CHECKED] Sélectionner du matériel depuis la liste
         - Renseigner les informations de réservation (dates, ...)
-        - Renseigner un ou plusieurs contacts
+        [CHECKED] Renseigner un ou plusieurs contacts
         - Renseigner un projet
-        - Découper en template
+        [CHECKED] Découper en template
         - Valider et confirmer la réservation
         - POUR PLUS TARD
             - Besoin que la réservation soit validée par un admin pour être prise en compte
@@ -23,6 +27,6 @@
         - Noter du matériel comme abimé/manquant après un rendu
 
 Mise en forme
-    - Créer un template HTML pour le header du site, le mettre sur toutes les pages
+    [CHECKED] Créer un template HTML pour le header du site, le mettre sur toutes les pages
     - Mettre en forme les pages du site (CSS/SCSS)
     - Remplir la page d'accueil (objectif finale, même après le rendu final -> avoir un site complet pour 803z)

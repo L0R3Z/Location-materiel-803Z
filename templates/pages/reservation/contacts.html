@@ -1,0 +1,69 @@
+<div class="contacts__container">
+    <h3>Personnes à contacter</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Discord</th>
+                <th>Téléphone</th>
+                <th>Autre...</th>
+                <th>Retirer</th>
+            </tr>
+        </thead>
+        <tbody class="contacts__list">
+        </tbody>
+    </table>
+
+    <button id="addcontact">Ajouter une personne</button>
+</div>
+
+<script>
+    // DOM Elements
+    const contactsList = document.querySelector(".contacts__list");
+    const addContactButton = document.querySelector("#addcontact");
+
+    function addContact() {
+        row = document.createElement("tr");
+        row.classList.add("contact__form");
+        row.innerHTML = `<td><input type="text" name="nom" placeholder="nom"></td>
+        <td><input type="text" name="prenom" placeholder="prenom"></td>
+        <td><input type="text" name="email" placeholder="email"></td>
+        <td><input type="text" name="discord" placeholder="discord"></td>
+        <td><input type="text" name="telephone" placeholder="telephone"></td>
+        <td><input type="text" name="autre" placeholder="autre"></td>
+        <td><button class="deletecontact">Supprimer</button></td>`;
+        contactsList.append(row);
+    }
+
+    function removeContact(e) {
+        if (e.target.classList.contains("deletecontact")) {
+            event.target.parentNode.parentNode.remove();
+        }
+    }
+
+    function getAllContacts() {
+        const allContactForms = document.querySelectorAll(".contact__form");
+        const formData = [];
+        
+        allContactForms.forEach(form => {
+            const inputs = form.querySelectorAll('input');
+            const formObj = {};
+
+            inputs.forEach(input => {
+            formObj[input.name] = input.value;
+            });
+
+            formData.push(formObj);
+        })
+
+        return formData;
+    }
+
+    // Listeners
+    addContactButton.addEventListener("click", addContact);
+    contactsList.addEventListener("click", e => removeContact(e))
+
+    addContact();
+</script>

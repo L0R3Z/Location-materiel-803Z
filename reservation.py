@@ -10,7 +10,15 @@ def index():
         materiel_list = get_all_materiel_and_dispo()
         return render_template("pages/reservation.html", materiel_list=materiel_list)
     except Exception as e: # If the query fails, render the template with a user-friendly error message
-        return render_template("pages/reservation.html", error=str(e)) 
+        return render_template("pages/reservation.html", error=str(e))
+
+@reservation.route("/makereservation", methods=["GET", "POST"])
+def makereservation():
+    try:
+        data = request.json
+        return {"message": "Réservation effectuée !"}
+    except Exception as e:
+        return {"error": str(e)}
 
 # Get all the materiel contained in the Materiel table
 def get_all_materiel():
