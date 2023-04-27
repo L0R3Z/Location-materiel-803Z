@@ -1,0 +1,28 @@
+- Partie utilisateur
+    - Ajouter des filtres de recherche pour le matériel (en fonction du type et de la dispo...)
+    - Pouvoir faire une réservation de matériel
+        - Sélectionner du matériel depuis la liste
+        - Lancer une réservation (redirection vers la page de réservation à partir du matériel sélectionné)
+        - Renseigner les informations de réservation (dates, ...)
+        - Renseigner un ou plusieurs contacts
+        - Renseigner un projet
+        - Valider et confirmer la réservation
+        - POUR PLUS TARD
+            - Besoin que la réservation soit validée par un admin pour être prise en compte
+            - Envoie un mail aux admin notés respo matériel lorsqu'une nouvelle réservation est effectuée
+            - Possibilité de refuser une réservation, de proposer d'autre matériel en fonction des disponibilités...
+- Back admin
+    - Pouvoir gérer le matériel depuis le back admin
+        - Afficher la liste de matériel
+        - Ajouter du matériel
+        - Supprimer du matériel
+        - Modifier du matériel
+    - Pouvoir gérer les réservations depuis le back admin
+        - Afficher la liste des réservations
+        - Noter une réservation comme rendue, partiellement rendue, indiquer la date de restitution, décaler la date de fin...
+        - Noter du matériel comme abimé/manquant après un rendu
+
+Mise en forme
+    - Créer un template HTML pour le header du site, le mettre sur toutes les pages
+    - Mettre en forme les pages du site (CSS/SCSS)
+    - Remplir la page d'accueil (objectif finale, même après le rendu final -> avoir un site complet pour 803z)

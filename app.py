@@ -44,7 +44,7 @@ CORS(app)
 # Index route
 @app.route("/")
 def accueil():
-    return render_template("accueil.html")
+    return render_template("index.html")
 
 # Import blueprint routes from another file
 app.register_blueprint(admin, url_prefix="/admin")

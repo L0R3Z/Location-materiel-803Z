@@ -61,6 +61,7 @@ def get_all_materiel_and_dispo():
                 AND disponible = 0
                 AND retour_incomplet = 0
                 AND m.quantite > 0
+                AND r2.date_fin > NOW()
             ) AS date_retour
             FROM Materiel m;
             ''')
