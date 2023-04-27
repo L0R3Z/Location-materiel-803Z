@@ -3,7 +3,7 @@ from flask import Flask, request, render_template, jsonify, abort, session, redi
 from flask_cors import CORS
 from database import connect_db, create_tables, insert_basic_datas
 from admin import admin
-from materiel import materiel
+from reservation import reservation
 
 
 
@@ -43,12 +43,12 @@ CORS(app)
 
 # Index route
 @app.route("/")
-def accueil():
-    return render_template("index.html")
+def index():
+    return render_template("pages/accueil.html")
 
 # Import blueprint routes from another file
 app.register_blueprint(admin, url_prefix="/admin")
-app.register_blueprint(materiel, url_prefix="/materiel")
+app.register_blueprint(reservation, url_prefix="/reservation")
 
 
 

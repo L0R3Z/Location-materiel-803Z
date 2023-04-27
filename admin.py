@@ -9,7 +9,7 @@ def index():
     # If the admin_id isn't empty, it means that the admin is connected
     if admin_id:
         print(admin_id)
-        return render_template("admin.html")
+        return render_template("pages/admin.html")
     # If it's empty, it means that the admin isn't connected
     # If so, redirect to the admin connection page
     else:
@@ -18,7 +18,7 @@ def index():
 
 @admin.route("/connexion/")
 def admin_connexion():
-    return render_template("admin_connexion.html")
+    return render_template("pages/admin_connexion.html")
 
 @admin.route("/tryconnection/", methods=["GET", "POST"])
 def admin_tryconnection():
