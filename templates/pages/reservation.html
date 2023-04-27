@@ -2,69 +2,12 @@
 {% block content %}
     <h2>Réservation</h2>
     <div class="materiel">
-        <h3>Liste du matériel</h3>
-        <!-- We use <table> to display our data because it's a better practice in terms of accessibility (built-in support for screen readers) -->
-        {% if not materiel_list %}
-            <p>Aucun matériel trouvé.</p>
-        {% else %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Réserver</th>
-                        <th>Type</th>
-                        <th>Modele</th>
-                        <th>Description</th>
-                        <th>Quantite</th>
-                        <th>Image</th>
-                        <th>Remarque</th>
-                        <th>Emprunté jusqu'au...</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for materiel in materiel_list %}
-                        {% if materiel.disponible %}
-                            <tr style="background-color: green;">
-                        {% else %}
-                            <tr style="background-color: red;">
-                        {% endif %}
-                            <td>
-                                {% if materiel.disponible %}
-                                    <input class="reserv_checkbox" id="{{ materiel.id_materiel }}" type="checkbox">
-                                {% else %}
-                                    <input type="checkbox" disabled>
-                                {% endif %}
-                            </td>
-                            <td>{{ materiel.type }}</td>
-                            <td>{{ materiel.modele }}</td>
-                            <td>{{ materiel.description }}</td>
-                            <td>{{ materiel.quantite }}</td>
-                            <td>
-                                {% if materiel.image %}
-                                    <img style="max-width: 150px;" src="{{ materiel.image }}">
-                                {% else %}
-                                    pas d'image...
-                                {% endif %}
-                            </td>
-                            <td>{{ materiel.remarque }}</td>
-                            <td>
-                                {% if materiel.date_retour %}
-                                    {{ materiel.date_retour }}            
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <div class="reserv_div hidden">
-                <p>Faire une réservation de matériel</p>
-                <button id="lancer_reservation">Lancer la réservation</button>
-            </div>
-        {% endif %}
+        {% include "./pages/reservation/materiel.html" %}
     </div>
 
-    {% if error %}
-        <p class="error">{{ error }}</p>
-    {% endif %}
+    <div class="materiel">
+
+    </div>
 
     <script>
         // DOM Elements

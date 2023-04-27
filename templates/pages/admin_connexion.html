@@ -23,25 +23,20 @@
         async function connect() {
             const username = inputUsername.value;
             const passwd = inputPasswd.value;
-            // Check if the values of username and passwd are empty
-            if(username && passwd) {
-                // Call tryconnection, to check if the username/passwd are valid
-                const response = await fetch("/admin/tryconnection", {
-                    method: 'POST',
-                    headers: {'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({'username':username, 'passwd':passwd})
-                });
-                const data = await response.json();
-                // If its valid, redirect to /admin
-                if(data == 1) {
-                    window.location.href = "/admin";
-                } else {
-                    textLogs.textContent = "Identifiant ou mot de passe incorrect"
-                }
+            // Call tryconnection, to check if the username/passwd are valid
+            const response = await fetch("/admin/tryconnection", {
+                method: 'POST',
+                headers: {'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({'username':username, 'passwd':passwd})
+            });
+            const data = await response.json();
+            // If its valid, redirect to /admin
+            if(data.value == 1) {
+                window.location.href = "/admin";
             } else {
-                textLogs.textContent = "Il faut renseigner des valeurs...";
+                textLogs.textContent = data.error
             }
         }
 

@@ -29,7 +29,7 @@ def get_all_materiel():
         return materiel_list
     except Exception as e: # Raise an exception if the request fails. This allows us to display the error message to the user.
         print(e)
-        raise Exception("Erreur: impossible de récupérer la liste de matériel") from e
+        raise Exception("Erreur : impossible de récupérer la liste de matériel") from e
 
 # Get all the materiel contained in the Materiel table, with its disponibility and its return date
 def get_all_materiel_and_dispo():
