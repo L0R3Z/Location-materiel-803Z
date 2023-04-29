@@ -1,22 +1,24 @@
 {% extends "./base.html" %}
 {% block content %}
     <h2>Réservation</h2>
-    <div class="materiel">
-        {% include "./pages/reservation/materiel.html" %}
-    </div>
-    <div class="dates">
-        {% include "./pages/reservation/dates.html" %}
-    </div>
-    <div class="contacts">
-        {% include "./pages/reservation/contacts.html" %}
-    </div>
-    <div class="projet">
-        {% include "./pages/reservation/projet.html" %}
-    </div>
+    <div class="reservation_page">
+        <div class="materiel">
+            {% include "./pages/reservation/materiel.html" %}
+        </div>
+        <div class="dates">
+            {% include "./pages/reservation/dates.html" %}
+        </div>
+        <div class="contacts">
+            {% include "./pages/reservation/contacts.html" %}
+        </div>
+        <div class="projet">
+            {% include "./pages/reservation/projet.html" %}
+        </div>
 
-    <div class="reserv_div hidden">
-        <p>Faire une réservation de matériel</p>
-        <button id="lancer_reservation">Lancer la réservation</button>
+        <div class="reserv_div hidden">
+            <p>Faire une réservation de matériel</p>
+            <button id="lancer_reservation">Lancer la réservation</button>
+        </div>
     </div>
 
     <script>
