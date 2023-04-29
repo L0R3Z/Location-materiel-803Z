@@ -3,3 +3,6 @@ Entrer dans l'environnement virtuel
 
 Puis lancer le serveur
 > flask run
+
+Lancer le serveur Mac 
+. /venv/bin/activate

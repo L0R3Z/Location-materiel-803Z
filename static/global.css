@@ -1,3 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
+
 .hidden {
     display: none;
+}
+
+* {-moz-box-sizing: border-box; box-sizing: border-box;}
+
+html{
+    background-color: black;
+    color:#FFF;
+}
+
+html, body {
+	height: 100%;
+	margin: 0; padding: 0;
+}
+
+body {
+	display : table;
+	width: 100%;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+}
+
+.logo-container img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+h1 {
+    text-transform: uppercase;
+    font-family: 'PT Mono', monospace ;
+    font-size: 25px;
+    margin: 50px;
+    padding : 5px;
+    border: solid 1px #FFF;
+}
+
+h2 {
+    text-transform: uppercase;
+    font-family: 'PT Mono', monospace ;
+    font-size: 18px;
+    margin: 50px !important;
+    padding : 5px;
+    border: solid 1px #FFF !important;
+}
+
+p{
+    font-family: 'PT Mono', monospace;
+}
+
+.home_p{
+    margin: 50px;
+    padding : 5px;
+    border: solid 1px #FFF;
+}
+
+.address{
+    margin: -45px 50px 30px 100px;
+    padding : 5px;
+    color: #F9A11A;
+    background-color: #333;
+}
+
+nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+}
+
+nav > a {
+    text-transform: uppercase;
+    font-family: 'PT Mono', monospace ;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    text-decoration: none;
+    font-size: 18px;
+    border: solid 1px #FFF;
+    background-color: #333;
+}
+
+nav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+nav a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+footer {
+    background-color: #f1f1f1;
+    font-family: 'PT Mono', monospace ;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    display : table-row;
+    width: 100%;
+    height: 50px;
+}
+
+footer > span {
+    margin-top: 20px;
+    top: -20px;
+}
+
+.reservation_page{
+    font-family: 'PT Mono', monospace ;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+@media screen and (max-width: 600px) {
+    nav {
+        display: flex;
+        flex-direction: column;
+        background-color: #333;
+        position: relative;
+        width: 100%;
+    }
 }
