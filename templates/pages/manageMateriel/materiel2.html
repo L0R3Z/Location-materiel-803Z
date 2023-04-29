@@ -1,0 +1,50 @@
+<div class="materiel__container">
+    <h3>Liste du matériel</h3>
+    <!-- We use <table> to display our data because it's a better practice in terms of accessibility (built-in support for screen readers) -->
+    {% if not materiel_list %}
+        <p>Aucun matériel trouvé.</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Modele</th>
+                    <th>Description</th>
+                    <th>Quantite</th>
+                    <th>Image</th>
+                    <th>Remarque</th>
+                    <th>Modifier ?</th>
+                    <th>Supprimer ?</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for materiel in materiel_list %}
+                    <tr style="background-color: lightgrey;">
+                        <td>{{ materiel.type }}</td>
+                        <td>{{ materiel.modele }}</td>
+                        <td>{{ materiel.description }}</td>
+                        <td>{{ materiel.quantite }}</td>
+                        <td>
+                            {% if materiel.image %}
+                                <img style="max-width: 150px;" src="{{ materiel.image }}">
+                            {% else %}
+                                pas d'image...
+                            {% endif %}
+                        </td>
+                        <td>{{ materiel.remarque }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin.admin_manageMateriel') }}/editMateriel/{{ materiel.id_materiel }}">
+                                <input type="submit" name="editMateriel" value="Modifier {{materiel.modele}}"/>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin.admin_manageMateriel') }}/deleteMateriel/{{ materiel.id_materiel }}">
+                                <input type="submit" name="deleteMateriel" value="Supprimer {{materiel.modele}}"/>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>

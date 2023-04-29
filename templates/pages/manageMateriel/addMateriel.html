@@ -1,0 +1,48 @@
+<div class="addMateriel__container">
+    <h3>Ajouter un matériel</h3>
+    <!-- We use <table> to display our data because it's a better practice in terms of accessibility (built-in support for screen readers) -->
+    <form method="POST" action="{{ url_for('admin.admin_manageMateriel') }}/addMateriel">
+        <fieldset>
+            <legend>Ajouter un matériel</legend>
+            <div>
+                <label for="type">Type : </label>
+                <select id="type" name="type" required>
+                    <optgroup label="Image">
+                        <option value="boitiers">Boîtiers</option>
+                        <option value="optiques">Optiques</option>
+                        <option value="accessoiresstockage">Accessoires / Stockage</option>
+                    </optgroup>
+                    <optgroup label="Son">
+                        <option value="enregistreurs">Enregistreurs</option>
+                        <option value="micros">Micros</option>
+                        <option value="son_accessoires">Accessoires</option>
+                    </optgroup>
+                    <optgroup label="Lumière">
+                        <option value="lumieres">Lumières</option>
+                        <option value="lumiere_accessoire">Accessoires</option>
+                        <option value="fonds">Fonds</option>
+                    </optgroup>
+                    <optgroup label="Connectiques & Batteries">
+                        <option value="cables">Câbles</option>
+                        <option value="chargeursbatteries">Chargeurs / Batteries</option>
+                    </optgroup>
+                </select>
+                <label for="modele">Modèle : </label>
+                <input type="text" name="modele" id="modele" placeholder="GoPro de la mort qui tue" required/>
+                <label for="quantite">Quantité : </label>
+                <input type="number" name="quantite" id="quantite" min="1" max="10" step="1" placeholder="1" required>
+            </div>
+            <div>
+                <label for="description">Description : </label>
+                <textarea name="description" id="description" rows="1" cols="50" placeholder="Focale trop cool" ></textarea>
+            </div>
+            <div>
+                <label for="image">URL de l'image : </label><input type="text" name="image" id="image" placeholder="https://www.europe-nature-optik.fr/884-tm_thickbox_default/kite-trepied-ardea-cf-avec-rotule-manfrotto-128rc.jpg" />
+                <label for="remarque">Remarque : </label><input type="text" name="remarque" id="remarque" placeholder="Support non-inclus" />
+            </div>
+            <div>
+                <input type="submit" value="Envoyer"/>
+            </div>
+        </fieldset>
+    </form>
+</div>
