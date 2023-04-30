@@ -1,3 +1,5 @@
+Suivre le tutoriel d'installation de Flask sur la documentation de Flask
+
 Entrer dans l'environnement virtuel
 > venv\Scripts\activate
 
