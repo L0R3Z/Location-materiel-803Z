@@ -16,7 +16,12 @@ def index():
 def makereservation():
     try:
         data = request.json
-        return {"message": "Réservation effectuée !"}
+        # Check if at least one piece of materiel is selected
+        if len(data["materiel"]) > 0:
+            # if 
+            return {"message": "Réservation effectuée !"}
+        else:
+            raise Exception("Erreur : aucun matériel n'a été sélectionné")
     except Exception as e:
         return {"error": str(e)}
 
@@ -82,6 +87,53 @@ def get_all_materiel_and_dispo():
         print(e)
         raise Exception("Erreur: impossible de récupérer la liste de matériel") from e
 
+# A FINIR!!!!!!!!!!!!
+def insert_reservation(dates):
+    try:
+        # Vérifier si dates.debut et dates.fin ont été renseignés
+        if dates.debut and dates.fin:
+            # Vérifier si dates.debut est au moins supérieure ou égale à la date du jeu  
+            if dates.debut:
+                # Vérifier si dates.fin est au moins supérieure ou égale à dates.debut
+                if dates.fin:
+                    print("réservation insérée avec succès!")
+                else:
+                    raise Exception("")
+            else:
+                raise Exception("")
+        else:
+            raise Exception("Erreur : les dates ne sont pas indiquées")
+    except Exception as e:
+        print(e)
+        raise Exception("Erreur lors de l'insertion de la réservation") from e
+
+# A FINIR!!!!!!!!!!!!
+def insert_projet(projet):
+    try:
+        if projet.description:
+            print("projet inséré avec succès!")
+        else:
+            raise Exception("Erreur : pour indiquer un projet, il faut au minimum renseigner sa description")
+    except Exception as e:
+        print(e)
+        raise Exception("Erreur lors de l'insertion du projet") from e
+
+# A FINIR!!!!!!!!!!!!
+def insert_contacts(contacts):
+    try:
+        # Check if there is at least one contact
+        if len(contacts) > 0:
+            # For each contact, check if all the informations are here
+            for contact in contacts:
+                if contact.nom and contact.prenom and contact.email:
+                    print("contacts insérés avec succès!")
+                else:
+                    raise Exception("Erreur : des informations sont manquantes sur au moins un contact")
+        else:
+            raise Exception("Erreur : merci de renseigner au minimum un contact")
+    except Exception as e:
+        print(e)
+        raise Exception("Erreur lors de l'insertion des contacts") from e
 
 # Pertinence/cohérence de la propriété quantité, puisqu'on gère le matériel à l'unité et au cas par cas (pour indiquer s'il a été emprunté, ajouter des remarques...) ?
 # Je pense qu'il serait plus judicieux de retirer cette propriété de la table Materiel.

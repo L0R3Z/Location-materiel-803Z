@@ -34,11 +34,9 @@ def admin_tryconnection():
                 session["admin_id"] = adminId
                 return {"value": 1}
             else:
-                e = Exception("Erreur : identifiant ou mot de passe incorrect")
-                return {"error": str(e)}
+                raise Exception("Erreur : identifiant ou mot de passe incorrect")
         else:
-            e = Exception("Erreur : valeur manquante")
-            return {"error": str(e)}
+            raise Exception("Erreur : valeur manquante")
     except Exception as e:
         print(e)
         return {"error": str(e)}
