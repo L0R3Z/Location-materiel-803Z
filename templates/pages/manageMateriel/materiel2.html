@@ -1,0 +1,65 @@
+<div class="materiel__container">
+    <h3>Liste du matériel</h3>
+    <!-- We use <table> to display our data because it's a better practice in terms of accessibility (built-in support for screen readers) -->
+    {% if not materiel_list %}
+        <p>Aucun matériel trouvé.</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Modele</th>
+                    <th>Description</th>
+                    <th>Quantite</th>
+                    <th>Image</th>
+                    <th>Remarque</th>
+                    <th>Modifier ?</th>
+                    <th>Supprimer ?</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for materiel in materiel_list %}
+                    <tr style="background-color: lightgrey;">
+                        <td>{{ materiel.type }}</td>
+                        <td>{{ materiel.modele }}</td>
+                        <td>{{ materiel.description }}</td>
+                        <td>{{ materiel.quantite }}</td>
+                        <td>
+                            {% if materiel.image %}
+                                <img style="max-width: 150px;" src="{{ materiel.image }}">
+                            {% else %}
+                                pas d'image...
+                            {% endif %}
+                        </td>
+                        <td>{{ materiel.remarque }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin.admin_manageMateriel') }}/editMateriel/{{ materiel.id_materiel }}">
+                                <input type="submit" name="editMateriel" value="Modifier {{materiel.modele}}"/>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST" class="deleteMateriel" action="{{ url_for('admin.admin_manageMateriel') }}/deleteMateriel">
+                                <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
+                                <input type="submit" name="deleteMateriel" value="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer le matériel &quot;{{materiel.modele}}&quot; ?')"/>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+
+<script>
+    // DOM Elements
+    const deleteButtons = document.querySelector(".deleteMateriel");
+
+    // To do when clicking on a delete button
+    function deleteHandler(event) {
+        if (!confirm('Êtes-vous sûr de vouloir supprimer ce matériel ?')) {
+            event.preventDefault();
+        }
+    }
+
+    deleteButtons.forEach(button => {button.addEventListener("submit", deleteHandler)});
+</script>
