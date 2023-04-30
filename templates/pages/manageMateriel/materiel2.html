@@ -38,8 +38,9 @@
                             </form>
                         </td>
                         <td>
-                            <form method="POST" action="{{ url_for('admin.admin_manageMateriel') }}/deleteMateriel/{{ materiel.id_materiel }}">
-                                <input type="submit" name="deleteMateriel" value="Supprimer {{materiel.modele}}"/>
+                            <form method="POST" class="deleteMateriel" action="{{ url_for('admin.admin_manageMateriel') }}/deleteMateriel">
+                                <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
+                                <input type="submit" name="deleteMateriel" value="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer le matériel &quot;{{materiel.modele}}&quot; ?')"/>
                             </form>
                         </td>
                     </tr>
@@ -48,3 +49,17 @@
         </table>
     {% endif %}
 </div>
+
+<script>
+    // DOM Elements
+    const deleteButtons = document.querySelector(".deleteMateriel");
+
+    // To do when clicking on a delete button
+    function deleteHandler(event) {
+        if (!confirm('Êtes-vous sûr de vouloir supprimer ce matériel ?')) {
+            event.preventDefault();
+        }
+    }
+
+    deleteButtons.forEach(button => {button.addEventListener("submit", deleteHandler)});
+</script>
