@@ -1,10 +1,12 @@
 {% extends "./base.html" %}
 {% block content %}
 	<h2>Gérer le matériel</h2>
-	<div class="materiel">
-		{% include "./pages/manageMateriel/materiel2.html" %}
-    </div>
-	<div class="addMateriel">
-		{% include "./pages/manageMateriel/addMateriel.html" %}
+	<div class="materiel_admin_page">
+		<div class="materiel">
+			{% include "./pages/manageMateriel/materiel2.html" %}
+		</div>
+		<div class="addMateriel">
+			{% include "./pages/manageMateriel/addMateriel.html" %}
+		</div>
 	</div>
 {% endblock %}
