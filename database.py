@@ -111,10 +111,21 @@ def insert_basic_datas(mydb, mycursor):
     
     # Insert sample values in Materiel
     mycursor.execute('''INSERT INTO Materiel(type, modele, description, quantite, image, remarque) VALUES
-        ("camera", "Canon cramptes 13", "contre focale triple 57mm", 1, "", "inutilisable"),
+        ("boitier", "Canon cramptes 13", "contre focale triple 57mm", 1, "", "inutilisable"),
         ("trepied", "Trepied 2000", "18m 4 pieds etc.", 1, "https://www.europe-nature-optik.fr/884-tm_thickbox_default/kite-trepied-ardea-cf-avec-rotule-manfrotto-128rc.jpg", ""),
         ("camera", "Canon apagn 8", "focale double 14mm avec lampe frontale", 2, "", ""),
-        ("micro", "micro pro 1234", "il est vrmt bien", 0, "", "");
+        ("micro", "micro pro 1234", "il est vrmt bien", 0, "", ""), 
+        ("boitier", "Canon 550D", "Monture : Canon EF", 1, "", ""), 
+        ("boitier", "Canon 5D Mark II", "Monture : Canon EF", 1, "", ""), ("boitier", "Canon 6D Mark II", "Monture : Canon EF", 1, "", ""), 
+        ("boitier", "Sony A7SII", "Monture : Sony E", 1, "", ""),
+        ("boitier", "Kit GOPRO HERO2", "", 1, "", ""),
+        ("boitier", "Black Magic Pocket 4k", "Monture : Micro 4/3", 1, "", ""), 
+        ("optique", "CANON 2.8/ 16-35mm", "Monture : EF, diamètre : 82", 1, "", ""),("optique", "CANON 3.5-5.6/ 28-80mm", "Monture : EF, diamètre : 58", 1, "", ""), 
+        ("accessoire", "Filtre MIST", "", 0, "", ""),
+        ("accessoire", "Pare-Soleil SAMYANG", "", 5, "", ""), 
+        ("accessoire", "Filtre N/D 100-400", "taille : 82mm", 1, "", ""),
+        ("machinerie", "Stabilisateur Smartphone DJI", "", 3, "", ""), ("machinerie", "Steadicam MERLIN", "", 3, "", "Manuel / PT"), 
+        ("machinerie", "Cross épaule", "", 1, "", "Contre-poid instable, protection décollée, vise manque (au niveau du poid principale), légere tendance à perdre sa poignée.") ;
         ''')
     mydb.commit()
     
@@ -123,7 +134,9 @@ def insert_basic_datas(mydb, mycursor):
         ("2022-09-30", "2022-10-05", 1, "2022-10-07", 1, 0),
         ("2023-04-24", "2023-12-04", 1, null, 0, 0),
         ("2023-04-25", "2023-04-27", 1, "2023-04-26", 0, 1),
-        ("2023-04-26", "2024-01-04", 0, null, 0, 0);
+        ("2023-04-26", "2024-01-04", 0, null, 0, 0), 
+        ("2023-04-28", "2023-05-01", 1, "2023-05-01", 0, 1),
+        ("2023-04-02", "2023-04-15", 1, "2023-04-15", 1, 0);
         ''')
     mydb.commit()
     
@@ -138,13 +151,9 @@ def insert_basic_datas(mydb, mycursor):
         ''')
     mydb.commit()
 
-# mycursor.execute('''select * from Contacts''')
-# contacts = mycursor.fetchall()
-# print(contacts)
-
-# print('-------------------')
-# mycursor.execute('''select * from Contacts''')
-# print(mycursor.fetchone())
-
-# for contacts in mycursor:
-#     print(contacts)
+    # Insert sample values in Projet
+    mycursor.execute('''INSERT INTO Projets (id_reservation, nom, description, participants) VALUES 
+        (1, "Gamejam shy visuels", "création de visuels pour un jeu créé pendant une gamejam de 45h (gamejam advance)", "Enzo, Sukai, ER, AD"),
+        (2, "Title Sequence", "Title sequence filmé + scènes 3D réalisé en 2eme année", "Sukai");
+        ''')
+    mydb.commit()

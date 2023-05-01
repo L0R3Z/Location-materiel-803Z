@@ -72,7 +72,7 @@
 
     function getAllMateriel() {
         // Get the database id of the materiel reserved
-        return (Array.from(reservCheckbox)).map(checkbox => checkbox.id);
+        return ((Array.from(reservCheckbox)).filter(checkbox => checkbox.checked)).map(checkbox => checkbox.id);
     }
     
     reservCheckbox.forEach(checkbox => {checkbox.addEventListener("click", checkboxHandler)});
