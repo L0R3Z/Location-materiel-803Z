@@ -41,7 +41,6 @@ def create_tables(mydb, mycursor):
         type VARCHAR(50) NOT NULL,
         modele VARCHAR(255) NOT NULL,
         description TEXT,
-        quantite INT NOT NULL DEFAULT 1,
         image VARCHAR(500),
         remarque TEXT
         )''')
@@ -110,22 +109,25 @@ def insert_basic_datas(mydb, mycursor):
     mydb.commit()
     
     # Insert sample values in Materiel
-    mycursor.execute('''INSERT INTO Materiel(type, modele, description, quantite, image, remarque) VALUES
-        ("boitier", "Canon cramptes 13", "contre focale triple 57mm", 1, "", "inutilisable"),
-        ("trepied", "Trepied 2000", "18m 4 pieds etc.", 1, "https://www.europe-nature-optik.fr/884-tm_thickbox_default/kite-trepied-ardea-cf-avec-rotule-manfrotto-128rc.jpg", ""),
-        ("camera", "Canon apagn 8", "focale double 14mm avec lampe frontale", 2, "", ""),
-        ("micro", "micro pro 1234", "il est vrmt bien", 0, "", ""), 
-        ("boitier", "Canon 550D", "Monture : Canon EF", 1, "", ""), 
-        ("boitier", "Canon 5D Mark II", "Monture : Canon EF", 1, "", ""), ("boitier", "Canon 6D Mark II", "Monture : Canon EF", 1, "", ""), 
-        ("boitier", "Sony A7SII", "Monture : Sony E", 1, "", ""),
-        ("boitier", "Kit GOPRO HERO2", "", 1, "", ""),
-        ("boitier", "Black Magic Pocket 4k", "Monture : Micro 4/3", 1, "", ""), 
-        ("optique", "CANON 2.8/ 16-35mm", "Monture : EF, diamètre : 82", 1, "", ""),("optique", "CANON 3.5-5.6/ 28-80mm", "Monture : EF, diamètre : 58", 1, "", ""), 
-        ("accessoire", "Filtre MIST", "", 0, "", ""),
-        ("accessoire", "Pare-Soleil SAMYANG", "", 5, "", ""), 
-        ("accessoire", "Filtre N/D 100-400", "taille : 82mm", 1, "", ""),
-        ("machinerie", "Stabilisateur Smartphone DJI", "", 3, "", ""), ("machinerie", "Steadicam MERLIN", "", 3, "", "Manuel / PT"), 
-        ("machinerie", "Cross épaule", "", 1, "", "Contre-poid instable, protection décollée, vise manque (au niveau du poid principale), légere tendance à perdre sa poignée.") ;
+    mycursor.execute('''INSERT INTO Materiel(type, modele, description, image, remarque) VALUES
+        ("boitier", "Canon cramptes 13", "contre focale triple 57mm", "", "inutilisable"),
+        ("trepied", "Trepied 2000", "18m 4 pieds etc.", "https://www.europe-nature-optik.fr/884-tm_thickbox_default/kite-trepied-ardea-cf-avec-rotule-manfrotto-128rc.jpg", ""),
+        ("camera", "Canon apagn 8", "focale double 14mm avec lampe frontale", "", ""),
+        ("micro", "micro pro 1234", "il est vrmt bien", "", ""), 
+        ("boitier", "Canon 550D", "Monture : Canon EF", "", ""), 
+        ("boitier", "Canon 5D Mark II", "Monture : Canon EF", "", ""),
+        ("boitier", "Canon 6D Mark II", "Monture : Canon EF", "", ""), 
+        ("boitier", "Sony A7SII", "Monture : Sony E", "", ""),
+        ("boitier", "Kit GOPRO HERO2", "", "", ""),
+        ("boitier", "Black Magic Pocket 4k", "Monture : Micro 4/3", "", ""), 
+        ("optique", "CANON 2.8/ 16-35mm", "Monture : EF, diamètre : 82", "", ""),
+        ("optique", "CANON 3.5-5.6/ 28-80mm", "Monture : EF, diamètre : 58", "", ""), 
+        ("accessoire", "Filtre MIST", "", "", ""),
+        ("accessoire", "Pare-Soleil SAMYANG", "", "", ""), 
+        ("accessoire", "Filtre N/D 100-400", "taille : 82mm", "", ""),
+        ("machinerie", "Stabilisateur Smartphone DJI", "", "", ""),
+        ("machinerie", "Steadicam MERLIN", "", "", "Manuel / PT"), 
+        ("machinerie", "Cross épaule", "", "", "Contre-poid instable, protection décollée, vise manque (au niveau du poid principale), légere tendance à perdre sa poignée.") ;
         ''')
     mydb.commit()
     
