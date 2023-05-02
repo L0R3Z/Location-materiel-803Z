@@ -23,7 +23,7 @@ if isDatabaseCreated == 0:
     insert_basic_datas(mydb, mycursor)
 
 # In case I want to insert random values into the database...
-# mycursor.execute('''INSERT INTO Materiel(type, modele, description, quantite, image, remarque) VALUES
+# mycursor.execute('''INSERT INTO Materiel(type, modele, description, image, remarque) VALUES
 #     ("trepied", "Trepied 2000", "18m 4 pieds etc.", 1, "https://www.europe-nature-optik.fr/884-tm_thickbox_default/kite-trepied-ardea-cf-avec-rotule-manfrotto-128rc.jpg", "")''')
 # mydb.commit()
     

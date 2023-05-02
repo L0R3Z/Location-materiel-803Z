@@ -87,14 +87,14 @@ def admin_addMateriel():
                 mycursor = mydb.cursor()
                 print("inside admin_addMateriel  ")
                 if request.form['image']:
-                    tempQuery = '''INSERT INTO Materiel(type, modele, description, quantite, image, remarque) 
+                    tempQuery = '''INSERT INTO Materiel(type, modele, description, image, remarque) 
                     VALUES (%s, %s, %s, %s, %s, %s)'''
-                    mycursor.execute(tempQuery, (str(request.form['type']), str(request.form['modele']), str(request.form['description']), str(request.form['image']), str(request.form['quantite']), str(request.form['remarque'])))
+                    mycursor.execute(tempQuery, (str(request.form['type']), str(request.form['modele']), str(request.form['description']), str(request.form['image']), str(request.form['remarque'])))
                 # Case when no image url is send
                 else:
-                    tempQuery = '''INSERT INTO Materiel(type, modele, description, quantite, remarque) 
+                    tempQuery = '''INSERT INTO Materiel(type, modele, description, remarque) 
                     VALUES (%s, %s, %s, %s, %s)'''
-                    mycursor.execute(tempQuery, (str(request.form['type']), str(request.form['modele']), str(request.form['description']), str(request.form['quantite']), str(request.form['remarque'])))
+                    mycursor.execute(tempQuery, (str(request.form['type']), str(request.form['modele']), str(request.form['description']), str(request.form['remarque'])))
                 mydb.commit()
                 mycursor.close()
                 return redirect(url_for("admin.admin_manageMateriel"))
@@ -140,7 +140,7 @@ def admin_get_all_materiel():
         mycursor = mydb.cursor()
         print("inside admin_get_all_materiel  ")
         # For performance and code maintainability reasons, it's better to specify the fields to SELECT rather than using "SELECT *"
-        mycursor.execute('''SELECT id_materiel, type, modele, description, quantite, image, remarque FROM Materiel
+        mycursor.execute('''SELECT id_materiel, type, modele, description, image, remarque FROM Materiel
             ORDER BY type, modele
             ''')
         rows = mycursor.fetchall()
