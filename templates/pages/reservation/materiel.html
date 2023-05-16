@@ -1,5 +1,33 @@
 <div class="materiel__container">
     <h3>Liste du matériel</h3>
+    <div class="materiel__recherche">
+        <label>uniquement matos dispo ?</label>
+        <input class="recherche_dispo" type="checkbox">
+        <select class="recherche_type" name="type">
+            <option value=""></option>
+            <optgroup label="Image">
+                <option value="boitier">Boîtiers</option>
+                <option value="optiques">Optiques</option>
+                <option value="accessoiresstockage">Accessoires / Stockage</option>
+            </optgroup>
+            <optgroup label="Son">
+                <option value="enregistreurs">Enregistreurs</option>
+                <option value="micros">Micros</option>
+                <option value="son_accessoires">Accessoires</option>
+            </optgroup>
+            <optgroup label="Lumière">
+                <option value="lumieres">Lumières</option>
+                <option value="lumiere_accessoire">Accessoires</option>
+                <option value="fonds">Fonds</option>
+            </optgroup>
+            <optgroup label="Connectiques & Batteries">
+                <option value="cables">Câbles</option>
+                <option value="chargeursbatteries">Chargeurs / Batteries</option>
+            </optgroup>
+        </select>
+        <button class="recherche_button">Rechercher</button>
+    </div>
+    
     <!-- We use <table> to display our data because it's a better practice in terms of accessibility (built-in support for screen readers) -->
     {% if not materiel_list %}
         <p>Aucun matériel trouvé.</p>
@@ -56,6 +84,9 @@
 <script>
     // DOM Elements
     const reservCheckbox = document.querySelectorAll(".reserv_checkbox");
+    const rechercheDispo = document.querySelector(".recherche_dispo");
+    const rechercheType = document.querySelector(".recherche_type");
+    const rechercheButton = document.querySelector(".recherche_button");
 
     // To do when clicking on a checkbox
     function checkboxHandler() {
@@ -72,6 +103,43 @@
         // Get the database id of the materiel reserved
         return ((Array.from(reservCheckbox)).filter(checkbox => checkbox.checked)).map(checkbox => checkbox.id);
     }
+
+    // Get all search parameters organized
+    function getAllSearchParameters() {
+        checkedValue = 0;
+        if(rechercheDispo.checked) checkedValue = 1;
+        return {
+            dispo: checkedValue,
+            type: rechercheType.value
+        }
+    }
+
+    // To do when clicking on the search button
+    async function rechercheHandler() {
+        parameters = getAllSearchParameters();
+
+        console.log(parameters);
+
+        // Give the reservation data to the back
+        const response = await fetch("/reservation/searchmateriel", {
+            method: 'POST',
+            headers: {'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(parameters)
+        });
+        const data = await response.json();
+
+        console.log(data);
+
+        if(data.error) console.log(data.error);
+        else if(data.message) console.log(data.message);
+        else console.log("it's all good, man");
+    }
+
+    
     
     reservCheckbox.forEach(checkbox => {checkbox.addEventListener("click", checkboxHandler)});
+    rechercheButton.addEventListener("click", rechercheHandler);
+
 </script>

@@ -1,33 +1,48 @@
-- Error handling
-    - Bien vérifier les types des données avant de lancer les requêtes
-    - Bien vérifier la longueur
+Pour le 20/05 :
+    - Autre Important
+        - Retirer les propriétés inutiles pour le 20
 
-- Partie utilisateur
-    - Ajouter des filtres de recherche pour le matériel (en fonction du type et de la dispo...)
-    - Pouvoir faire une réservation de matériel (onepage)
-        [CHECKED] Sélectionner du matériel depuis la liste
-        - Renseigner les informations de réservation (dates, ...)
-        [CHECKED] Renseigner un ou plusieurs contacts
-        - Renseigner un projet
-        [CHECKED] Découper en template
-        - Valider et confirmer la réservation
-        - POUR PLUS TARD
-            - Besoin que la réservation soit validée par un admin pour être prise en compte
-            - Envoie un mail aux admin notés respo matériel lorsqu'une nouvelle réservation est effectuée
-            - Possibilité de refuser une réservation, de proposer d'autre matériel en fonction des disponibilités...
-- Back admin
-    - Pouvoir gérer le matériel depuis le back admin
-        [CHECKED] Afficher la liste de matériel
-        [CHECKED] Ajouter du matériel
-        - Moduler la fonction d'ajout de matériel
-        - Supprimer du matériel
-        - Modifier du matériel
-    - Pouvoir gérer les réservations depuis le back admin
-        - Afficher la liste des réservations
-        - Noter une réservation comme rendue, partiellement rendue, indiquer la date de restitution, décaler la date de fin...
-        - Noter du matériel comme abimé/manquant après un rendu
+    - Partie utilisateur
+        - Ajouter des filtres de recherche pour le matériel (en fonction du type et de la dispo...)
+        - Pouvoir faire une réservation de matériel (onepage)
+    
+    - Bug
+        - Téléphone lors de l'insertion de la réservation
+    
 
-Mise en forme
-    [CHECKED] Créer un template HTML pour le header du site, le mettre sur toutes les pages
-    - Mettre en forme les pages du site (CSS/SCSS)
-    - Remplir la page d'accueil (objectif finale, même après le rendu final -> avoir un site complet pour 803z)
+
+
+Tout
+    - Error handling
+        - Bien vérifier les types des données avant de lancer les requêtes
+        - Bien vérifier la longueur
+
+    - Partie utilisateur
+        - Ajouter des filtres de recherche pour le matériel (en fonction du type et de la dispo...)
+        - Pouvoir faire une réservation de matériel (onepage)
+            [CHECKED] Sélectionner du matériel depuis la liste
+            - Renseigner les informations de réservation (dates, ...)
+            [CHECKED] Renseigner un ou plusieurs contacts
+            - Renseigner un projet
+            [CHECKED] Découper en template
+            - Valider et confirmer la réservation
+            - POUR PLUS TARD
+                - Besoin que la réservation soit validée par un admin pour être prise en compte
+                - Envoie un mail aux admin notés respo matériel lorsqu'une nouvelle réservation est effectuée
+                - Possibilité de refuser une réservation, de proposer d'autre matériel en fonction des disponibilités...
+    - Back admin
+        - Pouvoir gérer le matériel depuis le back admin
+            [CHECKED] Afficher la liste de matériel
+            [CHECKED] Ajouter du matériel
+            - Moduler la fonction d'ajout de matériel
+            - Supprimer du matériel
+            - Modifier du matériel
+        - Pouvoir gérer les réservations depuis le back admin
+            - Afficher la liste des réservations
+            - Noter une réservation comme rendue, partiellement rendue, indiquer la date de restitution, décaler la date de fin...
+            - Noter du matériel comme abimé/manquant après un rendu
+
+    Mise en forme
+        [CHECKED] Créer un template HTML pour le header du site, le mettre sur toutes les pages
+        - Mettre en forme les pages du site (CSS/SCSS)
+        - Remplir la page d'accueil (objectif finale, même après le rendu final -> avoir un site complet pour 803z)
