@@ -33,7 +33,7 @@ def get_all_materiel():
         mycursor = mydb.cursor()
         print("inside get_all_materiel  ")
         # For performance and code maintainability reasons, it's better to specify the fields to SELECT rather than using "SELECT *"
-        mycursor.execute('''SELECT id_materiel, type, modele, description, quantite, image, remarque FROM Materiel
+        mycursor.execute('''SELECT id_materiel, type, modele, description, image, remarque FROM Materiel
             ORDER BY type, modele
             ''')
         rows = mycursor.fetchall()
@@ -51,7 +51,7 @@ def get_all_materiel_and_dispo():
         mydb = current_app.config['mydb']
         mycursor = mydb.cursor()
         # For performance and code maintainability reasons, it's better to specify the fields to SELECT rather than using "SELECT *"
-        mycursor.execute('''SELECT m.id_materiel, m.type, m.modele, m.description, m.quantite, m.image, m.remarque,
+        mycursor.execute('''SELECT m.id_materiel, m.type, m.modele, m.description, m.image, m.remarque,
             CASE
                 WHEN (
                 SELECT COUNT(*)
@@ -61,7 +61,6 @@ def get_all_materiel_and_dispo():
                 AND (
                     rm.rendu = 0
                     OR rm.manquant = 1
-                    OR m.quantite = 0
                 )
                 ) > 0 THEN 0
                 ELSE 1
@@ -73,7 +72,6 @@ def get_all_materiel_and_dispo():
                 WHERE rm2.id_materiel = m.id_materiel
                 AND disponible = 0
                 AND retour_incomplet = 0
-                AND m.quantite > 0
                 AND r2.date_fin > NOW()
             ) AS date_retour
             FROM Materiel m;
