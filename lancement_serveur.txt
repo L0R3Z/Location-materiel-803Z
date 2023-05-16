@@ -7,4 +7,4 @@ Puis lancer le serveur
 > flask run
 
 Lancer le serveur Mac 
-. /venv/bin/activate
+. venv/bin/activate
