@@ -23,7 +23,7 @@
         - Supprimer du matériel
         - Modifier du matériel
     - Pouvoir gérer les réservations depuis le back admin
-        - Afficher la liste des réservations
+        - [CHECKED] Afficher la liste des réservations
         - Noter une réservation comme rendue, partiellement rendue, indiquer la date de restitution, décaler la date de fin...
         - Noter du matériel comme abimé/manquant après un rendu
 
