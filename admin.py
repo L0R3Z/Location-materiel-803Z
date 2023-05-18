@@ -140,6 +140,83 @@ def admin_deleteMateriel():
     else:
         return redirect(url_for("admin.admin_connexion"))
 
+@admin.route("/manageMateriel/editMateriel", methods=['GET'])
+def admin_editMateriel():
+    admin_id = session.get("admin_id")
+    # If the admin_id isn't empty, it means that the admin is connected
+    if admin_id:
+        try:
+            if 'id_materiel' in request.args:
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                print("inside admin_editMateriel   ")
+                tempQuery = '''
+                    SELECT
+                        m.id_materiel,
+                        m.type,
+                        m.modele,
+                        m.description,
+                        m.image,
+                        m.remarque
+                    FROM Materiel m
+                    WHERE m.id_materiel = %s;
+                '''
+                mycursor.execute(tempQuery, (request.args.get('id_materiel'),))
+                # mydb.commit()
+                materiel_row = mycursor.fetchone()
+                # Convert the returned tuples into a well-organized dict with named properties
+                if materiel_row:
+                    materiel = dict(zip(mycursor.column_names, materiel_row))
+                else:
+                    materiel = None
+                mycursor.close()
+                return render_template("pages/admin_editMateriel.html", materiel=materiel)
+            else:
+                e = "Erreur : pas d'ID de matériel renseigné pour la modification"
+                return render_template("pages/admin.html", error=str(e))
+        except Exception as e: # If the query fails, render the template with a user-friendly error message
+            return render_template("pages/admin.html", error=str(e))
+    # If it's empty, it means that the admin isn't connected
+    # If so, redirect to the admin connection page
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+
+@admin.route("/manageMateriel/updateMateriel", methods=['POST'])
+def admin_updateMateriel():
+    admin_id = session.get("admin_id")
+    # If the admin_id isn't empty, it means that the admin is connected
+    if admin_id:
+        try:
+            if request.form['id_materiel']:
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                print("inside admin_updateMateriel")
+                if request.form['image']:
+                    tempQuery = '''
+                        UPDATE Materiel SET type = %s, modele = %s, description = %s, image = %s, remarque = %s 
+                        WHERE id_materiel = %s
+                    '''
+                    mycursor.execute(tempQuery, (str(request.form['type']), str(request.form['modele']), str(request.form['description']), str(request.form['image']), str(request.form['remarque']), str(request.form['id_materiel'])))
+                # Case when no image url is send
+                else:
+                    tempQuery = '''
+                        UPDATE Materiel SET type = %s, modele = %s, description = %s, image = NULL, remarque = %s 
+                        WHERE id_materiel = %s
+                    '''
+                    mycursor.execute(tempQuery, (str(request.form['type']), str(request.form['modele']), str(request.form['description']), str(request.form['remarque']), str(request.form['id_materiel'])))
+                mydb.commit()
+                mycursor.close()
+                return redirect(url_for('admin.admin_editMateriel', id_materiel=request.form['id_materiel']))
+            else:
+                e = "Erreur : pas d'ID de matériel renseigné pour la mise à jour"
+                return render_template("pages/admin.html", error=str(e))
+        except Exception as e: # If the query fails, render the template with a user-friendly error message
+            return render_template("pages/admin.html", error=str(e))
+    # If it's empty, it means that the admin isn't connected
+    # If so, redirect to the admin connection page
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+
 # Get all the materiel contained in the Materiel table
 def admin_get_all_materiel():
     try:
