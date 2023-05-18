@@ -86,7 +86,7 @@ def get_all_materiel_and_dispo():
                 JOIN Reservations_Materiel rm2 ON r2.id_reservation = rm2.id_reservation
                 WHERE rm2.id_materiel = m.id_materiel
                 AND disponible = 0
-                AND retour_incomplet = 0
+                AND retour_complet = 1
                 AND r2.date_fin > NOW()
             ) AS date_retour
             FROM Materiel m;
@@ -131,7 +131,7 @@ def get_searched_materiel(parameters):
                         JOIN Reservations_Materiel rm2 ON r2.id_reservation = rm2.id_reservation
                         WHERE rm2.id_materiel = m.id_materiel
                         AND disponible = 0
-                        AND retour_incomplet = 0
+                        AND retour_complet = 1
                         AND r2.date_fin > NOW()
                     ) AS date_retour
                     FROM Materiel m

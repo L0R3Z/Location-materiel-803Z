@@ -42,7 +42,8 @@ def create_tables(mydb, mycursor):
         modele VARCHAR(255) NOT NULL,
         description TEXT,
         image VARCHAR(500),
-        remarque TEXT
+        remarque TEXT,
+        archive BIT NOT NULL DEFAULT 0
         )''')
     mydb.commit()
 
@@ -51,10 +52,10 @@ def create_tables(mydb, mycursor):
         id_reservation INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
         date_debut DATE NOT NULL,
         date_fin DATE NOT NULL,
-        sortie BIT NOT NULL DEFAULT 0,  
+        sortie BIT NOT NULL DEFAULT 0,
         date_restitution DATE,
         retour_complet BIT NOT NULL DEFAULT 0,
-        retour_incomplet BIT NOT NULL DEFAULT 0
+        archive BIT NOT NULL DEFAULT 0
         )''')
     mydb.commit()
 
@@ -88,7 +89,6 @@ def create_tables(mydb, mycursor):
         id_reservation INT NOT NULL,
         id_materiel INT NOT NULL,
         rendu BIT NOT NULL DEFAULT 0,
-        manquant BIT NOT NULL DEFAULT 0,
         defaut BIT NOT NULL DEFAULT 0,
         FOREIGN KEY (id_reservation) REFERENCES Reservations(id_reservation),
         FOREIGN KEY (id_materiel) REFERENCES Materiel(id_materiel)
@@ -132,12 +132,12 @@ def insert_basic_datas(mydb, mycursor):
     mydb.commit()
     
     # Insert sample values in Reservations
-    mycursor.execute('''INSERT INTO Reservations(date_debut, date_fin, sortie, date_restitution, retour_complet, retour_incomplet) VALUES
+    mycursor.execute('''INSERT INTO Reservations(date_debut, date_fin, sortie, date_restitution, retour_complet, archive) VALUES
         ("2022-09-30", "2022-10-05", 1, "2022-10-07", 1, 0),
         ("2023-04-24", "2023-12-04", 1, null, 0, 0),
-        ("2023-04-25", "2023-04-27", 1, "2023-04-26", 0, 1),
+        ("2023-04-25", "2023-04-27", 1, "2023-04-26", 0, 0),
         ("2023-04-26", "2024-01-04", 0, null, 0, 0), 
-        ("2023-04-28", "2023-05-01", 1, "2023-05-01", 0, 1),
+        ("2023-04-28", "2023-05-01", 1, "2023-05-01", 0, 0),
         ("2023-04-02", "2023-04-15", 1, "2023-04-15", 1, 0);
         ''')
     mydb.commit()
@@ -157,5 +157,12 @@ def insert_basic_datas(mydb, mycursor):
     mycursor.execute('''INSERT INTO Projets (id_reservation, nom, description, participants) VALUES 
         (1, "Gamejam shy visuels", "création de visuels pour un jeu créé pendant une gamejam de 45h (gamejam advance)", "Enzo, Sukai, ER, AD"),
         (2, "Title Sequence", "Title sequence filmé + scènes 3D réalisé en 2eme année", "Sukai");
+        ''')
+    mydb.commit()
+    
+    # Insert sample values in Contacts
+    mycursor.execute('''INSERT INTO Contacts (id_reservation, nom, prenom, email, discord, telephone, autre) VALUES 
+        (1, "Bassot", "Enzo", "enzo.bassot@gmail.com", "Mrzozo#4244", "0782836972", "^^"),
+        (2, "Huet", "Quentin", "quentinhuet4500@gmail.com", "", "", "")
         ''')
     mydb.commit()

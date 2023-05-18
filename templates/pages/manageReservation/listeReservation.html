@@ -8,13 +8,13 @@
             <thead>
                 <tr>
 
-                    <!-- date_debut, date_fin, sortie, date_restitution, retour_complet, retour_incomplet -->
+                    <!-- date_debut, date_fin, sortie, date_restitution, retour_complet, archive -->
                     <th>Date début</th>
                     <th>Date fin</th>
                     <th>Sortie</th>
                     <th>Date de Restitution</th>
                     <th>Retour complet</th>
-                    <th>Retour incomplet</th>
+                    <th>Etat</th>
                     <th>Modifier ?</th>
                     <!-- <th>Supprimer ?</th> -->
                 </tr>
@@ -27,7 +27,7 @@
                         <td>{{ reservation.sortie }}</td>
                         <td>{{ reservation.date_restitution }}</td>
                         <td>{{ reservation.retour_complet }}</td>
-                        <td>{{ reservation.retour_incomplet }}</td>
+                        <td>{{ reservation.archive }}</td>
                         <td>
                             <form method="POST" action="{{ url_for('admin.admin_manageReservation') }}/editReservation/{{ reservation.id_reservation }}">
                                 <input type="submit" name="editReservation" value="Modifier {{reservation.retour_complet}}"/>
