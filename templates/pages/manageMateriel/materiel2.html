@@ -8,18 +8,50 @@
             <thead>
                 <tr>
                     <th>Type</th>
-                    <th>Modele</th>
+                    <th>Modèle</th>
                     <th>Description</th>
                     <th>Image</th>
                     <th>Remarque</th>
+                    <th>État</th>
                     <th>Modifier ?</th>
+                    <th>Archiver ?</th>
                     <th>Supprimer ?</th>
+                    <th>Défaut ?</th>
+                    <th>Début de réservation</th>
+                    <th>Fin de réservation</th>
+                    <th>Accès à la réservation</th>
                 </tr>
             </thead>
             <tbody>
                 {% for materiel in materiel_list %}
                     <tr style="background-color: lightgrey;">
-                        <td>{{ materiel.type }}</td>
+                        <td>
+                        {% if materiel.type == "boitiers" %}
+                            Boîtiers
+                        {% elif materiel.type == "optiques" %}
+                            Optiques
+                        {% elif materiel.type == "accessoiresstockage" %}
+                            Accessoires / Stockage
+                        {% elif materiel.type == "enregistreurs" %}
+                            Enregistreurs
+                        {% elif materiel.type == "micros" %}
+                            Micros
+                        {% elif materiel.type == "son_accessoires" %}
+                            Accessoires (Son)
+                        {% elif materiel.type == "lumieres" %}
+                            Lumières
+                        {% elif materiel.type == "lumiere_accessoire" %}
+                            Accessoires (Lumière)
+                        {% elif materiel.type == "fonds" %}
+                            Fonds
+                        {% elif materiel.type == "cables" %}
+                            Câbles
+                        {% elif materiel.type == "chargeursbatteries" %}
+                            Chargeurs / Batteries
+                        {% else %}
+                            /!\ {{ materiel.type }}
+                        {% endif %}
+                        </td>
                         <td>{{ materiel.modele }}</td>
                         <td>{{ materiel.description }}</td>
                         <td>
@@ -31,8 +63,17 @@
                         </td>
                         <td>{{ materiel.remarque }}</td>
                         <td>
+                            Archivé ?
+                        </td>
+                        <td>
                             <form method="POST" action="{{ url_for('admin.admin_manageMateriel') }}/editMateriel/{{ materiel.id_materiel }}">
-                                <input type="submit" name="editMateriel" value="Modifier {{materiel.modele}}"/>
+                                <input type="submit" name="editMateriel" value="Modifier"/>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST" class="archiveMateriel" action="{{ url_for('admin.admin_manageMateriel') }}/archiveMateriel">
+                                <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
+                                <input type="submit" name="archiveMateriel" value="Archiver" onclick="return confirm('Êtes-vous sûr de vouloir archiver le matériel &quot;{{materiel.modele}}&quot; ?')"/>
                             </form>
                         </td>
                         <td>
@@ -40,6 +81,54 @@
                                 <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
                                 <input type="submit" name="deleteMateriel" value="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer le matériel &quot;{{materiel.modele}}&quot; ?')"/>
                             </form>
+                        </td>
+                        <td>
+                            {% if materiel.defaut %}
+                            <ul>
+                                {% set defaut_list = materiel.defaut.split(',') %}
+                                {% for element in defaut_list %}
+                                    <li>{{ element }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                                
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if materiel.dates_debut %}
+                            <ul>
+                                {% set dates_debut_list = materiel.dates_debut.split(',') %}
+                                {% for element in dates_debut_list %}
+                                    <li>{{ element }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                                
+                            {% endif %}
+                        </td>
+                        <td>
+                            <ul>
+                            {% if materiel.dates_fin %}
+                                {% set dates_fin_list = materiel.dates_fin.split(',') %}
+                                {% for element in dates_fin_list %}
+                                    <li>{{ element }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                                
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if materiel.id_reservation %}
+                                <ul>
+                                {% set id_reservation_list = materiel.id_reservation.split(',') %}
+                                {% for element in id_reservation_list %}
+                                    <li>{{ element }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% else %}
+                                
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
