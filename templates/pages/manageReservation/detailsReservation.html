@@ -1,8 +1,8 @@
 <div class="materiel__container">
-    <h3>Liste des réservations</h3>
+    <h3>Détails de la réservation</h3>
     <!-- We use <table> to display our data because it's a better practice in terms of accessibility (built-in support for screen readers) -->
-    {% if not reservation_list %}
-        <p>Aucune réservation trouvée</p>
+    {% if not reservation_id %}
+        <p>La réservation n'a pas été trouvée</p>
     {% else %}
         <table>
             <thead>
@@ -21,7 +21,6 @@
                 </tr>
             </thead>
             <tbody>
-                {% for reservation in reservation_list %}
                     <tr style="background-color: lightgrey;">
                         <td>{{ reservation.date_debut }}</td>
                         <td>{{ reservation.date_fin }}</td>
@@ -30,10 +29,9 @@
                         <td>{{ reservation.retour_complet }}</td>
                         <td>{{ reservation.retour_incomplet }}</td>
                         <td>
-                            <!-- <form method="GET" action="{{ url_for('admin.admin_manageReservation') }}detailsReservation/{{ reservation.id_reservation }}">
+                            <form method="GET" action="{{ url_for('admin.admin_manageReservation') }}displayReservationDetails/{{ reservation.id_reservation }}">
                                 <input type="submit" name="detailsReservation" value="Détails {{reservation.id_reservation}}"/>
-                            </form> -->
-                            <a href="{{ url_for('admin.admin_manageReservation') }}detailsReservation/{{ reservation.id_reservation }}">Détails</a>
+                            </form>
                         </td>
                         <td>
                             <form method="POST" action="{{ url_for('admin.admin_manageReservation') }}/editReservation/{{ reservation.id_reservation }}">
@@ -47,22 +45,7 @@
                             </form>
                         </td>
                     </tr>
-                {% endfor %}
             </tbody>
         </table>
     {% endif %}
 </div>
-
-<script>
-    //DOM Elements
-    const deleteButtons = document.querySelector(".deleteReservation");
-
-    // To do when clicking on a delete button
-    function deleteHandler(event) {
-        if (!confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')) {
-            event.preventDefault();
-        }
-    }
-
-    deleteButtons.forEach(button => {button.addEventListener("submit", deleteHandler)});
-</script>

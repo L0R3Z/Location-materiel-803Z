@@ -186,3 +186,62 @@ def admin_manageReservation():
     # If so, redirect to the admin connection page
     else:
         return redirect(url_for("admin.admin_connexion"))
+
+
+@admin.route("/manageReservation/deleteReservation", methods=['POST'])
+def admin_deleteReservation():
+    admin_id = session.get("admin_id")
+    # If the admin_id isn't empty, it means that the admin is connected
+    if admin_id:
+        try:
+            if request.form['id_reservation']:
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                print("inside admin_deleteReservation   ")
+                tempQuery = '''DELETE FROM Contacts WHERE id_reservation= %s; DELETE FROM Projets WHERE id_reservation = %s; DELETE FROM Reservations WHERE id_reservation = %s; '''
+                mycursor.execute(tempQuery, (request.form['id_reservation'],request.form['id_reservation'], request.form['id_reservation']), multi=True)
+                mydb.commit()
+                mycursor.close()
+                return redirect(url_for("admin.admin_manageReservation"))
+            else:
+                e = "Erreur : pas d'ID de réservation renseigné pour la suprression"
+                return render_template("pages/admin.html", error=str(e))
+        except Exception as e: # If the query fails, render the template with a user-friendly error message
+            return render_template("pages/admin.html", error=str(e))
+    # If it's empty, it means that the admin isn't connected
+    # If so, redirect to the admin connection page
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+    
+# def admin_get_one_reservation(reservation_id):
+#     try:
+#         mydb = current_app.config['mydb']
+#         mycursor = mydb.cursor()
+#         print("inside admin_get_one_reservation")
+#         mycursor.execute('''
+#             SELECT id_reservation, date_debut, date_fin, sortie, date_restitution, retour_complet, retour_incomplet
+#             FROM Reservations
+#             WHERE id_reservation = %s
+#             ''', (reservation_id,))
+#         row = mycursor.fetchone()
+#         mycursor.close()
+        
+#         if row:
+#             reservation = dict(zip(mycursor.column_names, row))
+#             return reservation
+#         else:
+#             raise Exception("Réservation introuvable")
+#     except Exception as e:
+#         print(e)
+#         raise Exception("Erreur : impossible de récupérer la réservation") from e
+
+
+
+# @admin.route("/manageReservation/detailsReservation/<int:id_reservation>", methods=['GET', 'POST'])
+# def detailsReservation(id_reservation):
+#     try:
+#         reservation = admin_get_one_reservation(id_reservation)
+#         return render_template('detailsReservation.html', reservation=reservation)
+#     except Exception as e:
+#         print(e)
+#         return redirect(url_for('admin.manageReservation'))
