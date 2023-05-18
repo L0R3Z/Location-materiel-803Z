@@ -226,6 +226,9 @@ def insert_contacts(mycursor, contacts, reservation_id):
             # Check if the essential fields are provided
             if contact["nom"] and contact["prenom"] and contact["email"]:
                 try:
+                    # If telephone, format the variable
+                    if contact["telephone"] and len(contact["telephone"])>8:
+                        contact["telephone"] = contact["telephone"].replace(" ", "")
                     tempQuery = '''INSERT INTO Contacts(id_reservation, nom, prenom, email, discord, telephone, autre)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)'''
                     mycursor.execute(tempQuery, (reservation_id, str(contact["nom"]), str(contact["prenom"]), str(contact["email"]), str(contact["discord"]), str(contact["telephone"]), str(contact["autre"])))

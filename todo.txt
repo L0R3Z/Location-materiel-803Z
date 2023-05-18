@@ -1,10 +1,12 @@
 Pour le 20/05 :
     - Autre Important
-        - Retirer les propriétés inutiles pour le 20
+        [CHECKED] Retirer les propriétés inutiles pour le 20
+        [CHECKED] Ajouter les propriétés "archivé"
 
     - Partie utilisateur
-        - Ajouter des filtres de recherche pour le matériel (en fonction du type et de la dispo...)
-        - Pouvoir faire une réservation de matériel (onepage)
+        [CHECKED] Ajouter des filtres de recherche pour le matériel (en fonction du type et de la dispo...)
+        [CHECKED] Pouvoir faire une réservation de matériel
+        - Mettre à jour la vue après une recherche
     
     - Bug
         - Téléphone lors de l'insertion de la réservation
@@ -18,14 +20,14 @@ Tout
         - Bien vérifier la longueur
 
     - Partie utilisateur
-        - Ajouter des filtres de recherche pour le matériel (en fonction du type et de la dispo...)
+        [CHECKED] Ajouter des filtres de recherche pour le matériel (en fonction du type et de la dispo...)
         - Pouvoir faire une réservation de matériel (onepage)
             [CHECKED] Sélectionner du matériel depuis la liste
-            - Renseigner les informations de réservation (dates, ...)
+            [CHECKED] Renseigner les informations de réservation (dates, ...)
             [CHECKED] Renseigner un ou plusieurs contacts
-            - Renseigner un projet
+            [CHECKED] Renseigner un projet
             [CHECKED] Découper en template
-            - Valider et confirmer la réservation
+            [CHECKED] Valider et confirmer la réservation
             - POUR PLUS TARD
                 - Besoin que la réservation soit validée par un admin pour être prise en compte
                 - Envoie un mail aux admin notés respo matériel lorsqu'une nouvelle réservation est effectuée
