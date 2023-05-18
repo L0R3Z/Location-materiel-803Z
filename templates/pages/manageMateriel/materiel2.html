@@ -24,7 +24,7 @@
             </thead>
             <tbody>
                 {% for materiel in materiel_list %}
-                    <tr style="background-color: lightgrey;">
+                    <tr style="background-color: lightgrey; color:black;">
                         <td>
                         {% if materiel.type == "boitiers" %}
                             Boîtiers
@@ -66,8 +66,9 @@
                             Archivé ?
                         </td>
                         <td>
-                            <form method="POST" action="{{ url_for('admin.admin_manageMateriel') }}editMateriel/{{ materiel.id_materiel }}">
-                                <input type="submit" name="editMateriel" value="Modifier"/>
+                            <form method="GET" action="{{ url_for('admin.admin_manageMateriel') }}editMateriel">
+                                <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
+                                <input type="submit" value="Modifier">
                             </form>
                         </td>
                         <td>
