@@ -1,6 +1,21 @@
-- Error handling
-    - Bien vérifier les types des données avant de lancer les requêtes
-    - Bien vérifier la longueur
+Pour le 20/05 :
+    - Autre Important
+        - Retirer les propriétés inutiles pour le 20
+
+    - Partie utilisateur
+        - Ajouter des filtres de recherche pour le matériel (en fonction du type et de la dispo...)
+        - Pouvoir faire une réservation de matériel (onepage)
+    
+    - Bug
+        - Téléphone lors de l'insertion de la réservation
+    
+
+
+
+Tout
+    - Error handling
+        - Bien vérifier les types des données avant de lancer les requêtes
+        - Bien vérifier la longueur
 
 - Partie utilisateur
     - Ajouter des filtres de recherche pour le matériel (en fonction du type et de la dispo...)
@@ -23,11 +38,11 @@
         - Supprimer du matériel
         - Modifier du matériel
     - Pouvoir gérer les réservations depuis le back admin
-        - [CHECKED] Afficher la liste des réservations
+        - Afficher la liste des réservations
         - Noter une réservation comme rendue, partiellement rendue, indiquer la date de restitution, décaler la date de fin...
         - Noter du matériel comme abimé/manquant après un rendu
 
-Mise en forme
-    [CHECKED] Créer un template HTML pour le header du site, le mettre sur toutes les pages
-    - Mettre en forme les pages du site (CSS/SCSS)
-    - Remplir la page d'accueil (objectif finale, même après le rendu final -> avoir un site complet pour 803z)
+    Mise en forme
+        [CHECKED] Créer un template HTML pour le header du site, le mettre sur toutes les pages
+        - Mettre en forme les pages du site (CSS/SCSS)
+        - Remplir la page d'accueil (objectif finale, même après le rendu final -> avoir un site complet pour 803z)
