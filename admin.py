@@ -290,7 +290,7 @@ def admin_get_all_reservation():
         mycursor = mydb.cursor()
         print("inside admin_get_all_reservation  ")
         # For performance and code maintainability reasons, it's better to specify the fields to SELECT rather than using "SELECT *"
-        mycursor.execute('''SELECT id_reservation, date_debut, date_fin, sortie, date_restitution, retour_complet, retour_incomplet FROM Reservations ORDER BY date_debut
+        mycursor.execute('''SELECT id_reservation, date_debut, date_fin, sortie, date_restitution, retour_complet, archive FROM Reservations ORDER BY date_debut
             ''')
         rows = mycursor.fetchall()
         # Convert the returned tuples into a well-organized dict with named properties
