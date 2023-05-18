@@ -118,7 +118,14 @@ def admin_deleteMateriel():
                 mydb = current_app.config['mydb']
                 mycursor = mydb.cursor()
                 print("inside admin_deleteMateriel   ")
-                tempQuery = '''DELETE FROM Materiel WHERE id_materiel = %s;'''
+                tempQuery = '''
+                    DELETE FROM Reservations_Materiel WHERE id_materiel = %s;
+                '''
+                mycursor.execute(tempQuery, (request.form['id_materiel'],))
+                mydb.commit()
+                tempQuery = '''
+                    DELETE FROM Materiel WHERE id_materiel = %s;
+                '''
                 mycursor.execute(tempQuery, (request.form['id_materiel'],))
                 mydb.commit()
                 mycursor.close()
