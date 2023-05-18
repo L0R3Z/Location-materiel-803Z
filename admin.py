@@ -88,12 +88,12 @@ def admin_addMateriel():
                 print("inside admin_addMateriel  ")
                 if request.form['image']:
                     tempQuery = '''INSERT INTO Materiel(type, modele, description, image, remarque) 
-                    VALUES (%s, %s, %s, %s, %s, %s)'''
+                    VALUES (%s, %s, %s, %s, %s)'''
                     mycursor.execute(tempQuery, (str(request.form['type']), str(request.form['modele']), str(request.form['description']), str(request.form['image']), str(request.form['remarque'])))
                 # Case when no image url is send
                 else:
                     tempQuery = '''INSERT INTO Materiel(type, modele, description, remarque) 
-                    VALUES (%s, %s, %s, %s, %s)'''
+                    VALUES (%s, %s, %s, %s)'''
                     mycursor.execute(tempQuery, (str(request.form['type']), str(request.form['modele']), str(request.form['description']), str(request.form['remarque'])))
                 mydb.commit()
                 mycursor.close()
@@ -140,8 +140,55 @@ def admin_get_all_materiel():
         mycursor = mydb.cursor()
         print("inside admin_get_all_materiel  ")
         # For performance and code maintainability reasons, it's better to specify the fields to SELECT rather than using "SELECT *"
-        mycursor.execute('''SELECT id_materiel, type, modele, description, image, remarque FROM Materiel
-            ORDER BY type, modele
+        mycursor.execute('''
+            SELECT
+                m.id_materiel,
+                m.type,
+                m.modele,
+                m.description,
+                m.image,
+                m.remarque,
+                (
+                    SELECT 
+                        CASE
+                            WHEN COUNT(*) > 0 THEN GROUP_CONCAT(DISTINCT CASE rm.defaut WHEN true THEN 1 ELSE 0 END ORDER BY rm.id_reservation)
+                            ELSE NULL
+                        END
+                    FROM Reservations_Materiel rm
+                    WHERE rm.id_materiel = m.id_materiel
+                ) AS defaut,
+                (
+                    SELECT 
+                        CASE
+                            WHEN COUNT(*) > 0 THEN GROUP_CONCAT(DISTINCT CONCAT(r.date_debut) ORDER BY r.id_reservation)
+                            ELSE NULL
+                        END
+                    FROM Reservations r
+                    JOIN Reservations_Materiel rm ON r.id_reservation = rm.id_reservation
+                    WHERE rm.id_materiel = m.id_materiel
+                    AND (rm.rendu = 0 OR rm.manquant = 1 OR rm.defaut = 1)
+                ) AS dates_debut,
+                (
+                    SELECT 
+                        CASE
+                            WHEN COUNT(*) > 0 THEN GROUP_CONCAT(DISTINCT CONCAT(r.date_fin) ORDER BY r.id_reservation)
+                            ELSE NULL
+                        END
+                    FROM Reservations r
+                    JOIN Reservations_Materiel rm ON r.id_reservation = rm.id_reservation
+                    WHERE rm.id_materiel = m.id_materiel
+                    AND (rm.rendu = 0 OR rm.manquant = 1 OR rm.defaut = 1)
+                ) AS dates_fin,
+                (
+                    SELECT 
+                        CASE
+                            WHEN COUNT(*) > 0 THEN GROUP_CONCAT(DISTINCT rm.id_reservation ORDER BY rm.id_reservation)
+                            ELSE NULL
+                        END
+                    FROM Reservations_Materiel rm
+                    WHERE rm.id_materiel = m.id_materiel
+                ) AS id_reservation
+            FROM Materiel m;
             ''')
         rows = mycursor.fetchall()
         # Convert the returned tuples into a well-organized dict with named properties
