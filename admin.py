@@ -250,7 +250,7 @@ def admin_get_all_materiel():
                     FROM Reservations r
                     JOIN Reservations_Materiel rm ON r.id_reservation = rm.id_reservation
                     WHERE rm.id_materiel = m.id_materiel
-                    AND (rm.rendu = 0 OR rm.manquant = 1 OR rm.defaut = 1)
+                    AND (rm.rendu = 0 OR rm.defaut = 1)
                 ) AS dates_debut,
                 (
                     SELECT 
@@ -261,7 +261,7 @@ def admin_get_all_materiel():
                     FROM Reservations r
                     JOIN Reservations_Materiel rm ON r.id_reservation = rm.id_reservation
                     WHERE rm.id_materiel = m.id_materiel
-                    AND (rm.rendu = 0 OR rm.manquant = 1 OR rm.defaut = 1)
+                    AND (rm.rendu = 0 OR rm.defaut = 1)
                 ) AS dates_fin,
                 (
                     SELECT 
