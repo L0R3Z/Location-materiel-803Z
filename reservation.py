@@ -75,7 +75,6 @@ def get_all_materiel_and_dispo():
                 WHERE rm.id_materiel = m.id_materiel
                 AND (
                     rm.rendu = 0
-                    OR rm.manquant = 1
                 )
                 ) > 0 THEN 0
                 ELSE 1
@@ -86,8 +85,6 @@ def get_all_materiel_and_dispo():
                 JOIN Reservations_Materiel rm2 ON r2.id_reservation = rm2.id_reservation
                 WHERE rm2.id_materiel = m.id_materiel
                 AND disponible = 0
-                AND retour_complet = 1
-                AND r2.date_fin > NOW()
             ) AS date_retour
             FROM Materiel m;
             ''')
@@ -103,42 +100,39 @@ def get_all_materiel_and_dispo():
 # Get all the materiel contained in the Materiel table, with some research precisions
 def get_searched_materiel(parameters):
     try:
-        if parameters["type"] and (parameters["dispo"] or parameters["dispo"]==0):
+        if (parameters["type"] or parameters["type"]=="") and (parameters["dispo"] or parameters["dispo"]==0):
             mydb = current_app.config['mydb']
             mycursor = mydb.cursor()
             print("inside get_searched_materiel")
             # For performance and code maintainability reasons, it's better to specify the fields to SELECT rather than using "SELECT *"
             tempQuery = '''
-            SELECT id_materiel, type, modele, description, image, remarque, disponible, date_retour
-            FROM (
-                SELECT m.id_materiel, m.type, m.modele, m.description, m.image, m.remarque,
-                    CASE
-                        WHEN (
-                        SELECT COUNT(*)
-                        FROM Reservations r
-                        JOIN Reservations_Materiel rm ON r.id_reservation = rm.id_reservation
-                        WHERE rm.id_materiel = m.id_materiel
-                        AND (
-                            rm.rendu = 0
-                            OR rm.manquant = 1
-                        )
-                        ) > 0 THEN 0
-                        ELSE 1
-                    END AS disponible,
-                    (
-                        SELECT MAX(r2.date_fin)
-                        FROM Reservations r2
-                        JOIN Reservations_Materiel rm2 ON r2.id_reservation = rm2.id_reservation
-                        WHERE rm2.id_materiel = m.id_materiel
-                        AND disponible = 0
-                        AND retour_complet = 1
-                        AND r2.date_fin > NOW()
-                    ) AS date_retour
-                    FROM Materiel m
-                ) AS sub
-                WHERE sub.type = %s AND ((%s = 1 AND disponible = 1) OR %s = 0);
-                '''
-            mycursor.execute(tempQuery, (str(parameters["type"]), str(parameters["dispo"]), str(parameters["dispo"])))
+                SELECT id_materiel, type, modele, description, image, remarque, disponible, date_retour
+                FROM (
+                    SELECT m.id_materiel, m.type, m.modele, m.description, m.image, m.remarque,
+                        CASE
+                            WHEN (
+                            SELECT COUNT(*)
+                            FROM Reservations r
+                            JOIN Reservations_Materiel rm ON r.id_reservation = rm.id_reservation
+                            WHERE rm.id_materiel = m.id_materiel
+                            AND (
+                                rm.rendu = 0
+                            )
+                            ) > 0 THEN 0
+                            ELSE 1
+                        END AS disponible,
+                        (
+                            SELECT MAX(r2.date_fin)
+                            FROM Reservations r2
+                            JOIN Reservations_Materiel rm2 ON r2.id_reservation = rm2.id_reservation
+                            WHERE rm2.id_materiel = m.id_materiel
+                            AND disponible = 0
+                        ) AS date_retour
+                        FROM Materiel m
+                    ) AS sub
+                    WHERE ((sub.type = %s) OR %s = "") AND ((%s = 1 AND disponible = 1) OR %s = 0);
+                    '''
+            mycursor.execute(tempQuery, (str(parameters["type"]), str(parameters["type"]), str(parameters["dispo"]), str(parameters["dispo"])))
             print("Recherche effectuée avec succès!")
             rows = mycursor.fetchall()
             # Convert the returned tuples into a well-organized dict with named properties

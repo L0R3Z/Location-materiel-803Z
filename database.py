@@ -143,13 +143,13 @@ def insert_basic_datas(mydb, mycursor):
     mydb.commit()
     
     # Insert sample values in Reservations_Materiel
-    mycursor.execute('''INSERT INTO Reservations_Materiel(id_reservation, id_materiel, rendu, manquant, defaut) VALUES
-        (1, 2, 1, 0, 0),
-        (1, 3, 1, 0, 0),
-        (2, 2, 1, 0, 0),
-        (3, 1, 0, 1, 0),
-        (3, 4, 1, 0, 1),
-        (4, 2, 0, 0, 0);
+    mycursor.execute('''INSERT INTO Reservations_Materiel(id_reservation, id_materiel, rendu, defaut) VALUES
+        (1, 2, 1, 0),
+        (1, 3, 1, 0),
+        (2, 2, 1, 0),
+        (3, 1, 0, 0),
+        (3, 4, 1, 1),
+        (4, 2, 0, 0);
         ''')
     mydb.commit()
 
