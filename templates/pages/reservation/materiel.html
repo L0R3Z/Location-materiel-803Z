@@ -8,21 +8,27 @@
             <optgroup label="Image">
                 <option value="boitier">Boîtiers</option>
                 <option value="optique">Optiques</option>
-                <option value="accessoire_stockage">Accessoires / Stockage</option>
+                <option value="accessoirestockage">Accessoires / Stockage</option>
+                <option value="machinerie">Machinerie</option>
             </optgroup>
             <optgroup label="Son">
                 <option value="enregistreur">Enregistreurs</option>
                 <option value="micro">Micros</option>
-                <option value="accessoire_son">Accessoires</option>
+                <option value="son_accessoire">Accessoires</option>
             </optgroup>
             <optgroup label="Lumière">
                 <option value="lumiere">Lumières</option>
-                <option value="accessoire_lumiere">Accessoires</option>
+                <option value="lumiere_accessoire">Accessoires</option>
                 <option value="fond">Fonds</option>
+                <option value="gelatine">Gélatines</option>
             </optgroup>
             <optgroup label="Connectiques & Batteries">
                 <option value="cable">Câbles</option>
-                <option value="chargeur_batterie">Chargeurs / Batteries</option>
+                <option value="chargeurbatterie">Chargeurs / Batteries</option>
+            </optgroup>
+            <optgroup label="Régie">
+                <option value="consommable">Consommables</option>
+                <option value="regie_accessoire">Accessoires</option>
             </optgroup>
         </select>
         <button class="recherche_button">Rechercher</button>
@@ -83,13 +89,14 @@
 
 <script>
     // DOM Elements
-    const reservCheckbox = document.querySelectorAll(".reserv_checkbox");
+    let reservCheckbox = document.querySelectorAll(".reserv_checkbox");
     const rechercheDispo = document.querySelector(".recherche_dispo");
     const rechercheType = document.querySelector(".recherche_type");
     const rechercheButton = document.querySelector(".recherche_button");
 
     // To do when clicking on a checkbox
     function checkboxHandler() {
+        console.log("inside checkboxHandler")
         // If at least one checkbox is checked, display the reservDiv containing the reservation button
         isChecked = (Array.from(reservCheckbox)).some(checkbox => {
             return checkbox.checked;
@@ -155,6 +162,7 @@
                 checkbox.setAttribute("type", "checkbox");
                 checkbox.setAttribute("class", "reserv_checkbox");
                 checkbox.setAttribute("id", materiel.id_materiel);
+                checkbox.addEventListener("click", checkboxHandler);
                 reservCell.appendChild(checkbox);
                 row.style.backgroundColor = "green"; // à remplacer par une classe !
             } else {
@@ -190,6 +198,7 @@
             });
 
             tableBody.appendChild(row); // Ajouter la ligne au tableau
+            reservCheckbox = document.querySelectorAll(".reserv_checkbox");
         });
     }
 

@@ -111,8 +111,8 @@ def insert_basic_datas(mydb, mycursor):
     # Insert sample values in Materiel
     mycursor.execute('''INSERT INTO Materiel(type, modele, description, image, remarque) VALUES
         ("boitier", "Canon cramptes 13", "contre focale triple 57mm", "", "inutilisable"),
-        ("trepied", "Trepied 2000", "18m 4 pieds etc.", "https://www.europe-nature-optik.fr/884-tm_thickbox_default/kite-trepied-ardea-cf-avec-rotule-manfrotto-128rc.jpg", ""),
-        ("camera", "Canon apagn 8", "focale double 14mm avec lampe frontale", "", ""),
+        ("machinerie", "Trepied 2000", "18m 4 pieds etc.", "https://www.europe-nature-optik.fr/884-tm_thickbox_default/kite-trepied-ardea-cf-avec-rotule-manfrotto-128rc.jpg", ""),
+        ("boitier", "Canon apagn 8", "focale double 14mm avec lampe frontale", "", ""),
         ("micro", "micro pro 1234", "il est vrmt bien", "", ""), 
         ("boitier", "Canon 550D", "Monture : Canon EF", "", ""), 
         ("boitier", "Canon 5D Mark II", "Monture : Canon EF", "", ""),
@@ -122,9 +122,9 @@ def insert_basic_datas(mydb, mycursor):
         ("boitier", "Black Magic Pocket 4k", "Monture : Micro 4/3", "", ""), 
         ("optique", "CANON 2.8/ 16-35mm", "Monture : EF, diamètre : 82", "", ""),
         ("optique", "CANON 3.5-5.6/ 28-80mm", "Monture : EF, diamètre : 58", "", ""), 
-        ("accessoire", "Filtre MIST", "", "", ""),
-        ("accessoire", "Pare-Soleil SAMYANG", "", "", ""), 
-        ("accessoire", "Filtre N/D 100-400", "taille : 82mm", "", ""),
+        ("accessoirestockage", "Filtre MIST", "", "", ""),
+        ("accessoirestockage", "Pare-Soleil SAMYANG", "", "", ""), 
+        ("accessoirestockage", "Filtre N/D 100-400", "taille : 82mm", "", ""),
         ("machinerie", "Stabilisateur Smartphone DJI", "", "", ""),
         ("machinerie", "Steadicam MERLIN", "", "", "Manuel / PT"), 
         ("machinerie", "Cross épaule", "", "", "Contre-poid instable, protection décollée, vise manque (au niveau du poid principale), légere tendance à perdre sa poignée.") ;

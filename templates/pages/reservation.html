@@ -55,6 +55,7 @@
             const data = await response.json();
 
             console.log(data);
+            rechercheHandler();
 
             if(data.error) updateErrorMessage(data.error);
             else if(data.message) updateErrorMessage(data.message);
