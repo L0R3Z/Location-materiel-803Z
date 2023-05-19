@@ -75,7 +75,6 @@ def get_all_materiel_and_dispo():
                 WHERE rm.id_materiel = m.id_materiel
                 AND (
                     rm.rendu = 0
-                    OR rm.manquant = 1
                 )
                 ) > 0 THEN 0
                 ELSE 1
@@ -120,7 +119,6 @@ def get_searched_materiel(parameters):
                         WHERE rm.id_materiel = m.id_materiel
                         AND (
                             rm.rendu = 0
-                            OR rm.manquant = 1
                         )
                         ) > 0 THEN 0
                         ELSE 1
