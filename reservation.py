@@ -252,6 +252,3 @@ def insert_projet(mycursor, projet, reservation_id):
                 raise Exception("Erreur lors de l'insertion du projet") from e
         else:
             raise Exception("Erreur : pour indiquer un projet, il faut au minimum renseigner sa description")
-
-# Pertinence/cohérence de la propriété quantité, puisqu'on gère le matériel à l'unité et au cas par cas (pour indiquer s'il a été emprunté, ajouter des remarques...) ?
-# Je pense qu'il serait plus judicieux de retirer cette propriété de la table Materiel.

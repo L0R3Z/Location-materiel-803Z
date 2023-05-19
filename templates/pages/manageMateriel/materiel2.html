@@ -26,28 +26,36 @@
                 {% for materiel in materiel_list %}
                     <tr style="background-color: lightgrey; color:black;">
                         <td>
-                        {% if materiel.type == "boitiers" %}
-                            Boîtiers
-                        {% elif materiel.type == "optiques" %}
-                            Optiques
-                        {% elif materiel.type == "accessoiresstockage" %}
-                            Accessoires / Stockage
-                        {% elif materiel.type == "enregistreurs" %}
-                            Enregistreurs
-                        {% elif materiel.type == "micros" %}
-                            Micros
-                        {% elif materiel.type == "son_accessoires" %}
-                            Accessoires (Son)
-                        {% elif materiel.type == "lumieres" %}
-                            Lumières
+                            {% if materiel.type == "boitier" %}
+                            Boîtier
+                        {% elif materiel.type == "optique" %}
+                            Optique
+                        {% elif materiel.type == "accessoirestockage" %}
+                            Accessoire / Stockage
+                        {% elif materiel.type == "machinerie" %}
+                            Machinerie
+                        {% elif materiel.type == "enregistreur" %}
+                            Enregistreur
+                        {% elif materiel.type == "micro" %}
+                            Micro
+                        {% elif materiel.type == "son_accessoire" %}
+                            Accessoire (Son)
+                        {% elif materiel.type == "lumiere" %}
+                            Lumière
                         {% elif materiel.type == "lumiere_accessoire" %}
-                            Accessoires (Lumière)
-                        {% elif materiel.type == "fonds" %}
-                            Fonds
-                        {% elif materiel.type == "cables" %}
-                            Câbles
-                        {% elif materiel.type == "chargeursbatteries" %}
-                            Chargeurs / Batteries
+                            Accessoire (Lumière)
+                        {% elif materiel.type == "fond" %}
+                            Fond
+                        {% elif materiel.type == "gelatine" %}
+                            Gélatine
+                        {% elif materiel.type == "cable" %}
+                            Câble
+                        {% elif materiel.type == "chargeurbatterie" %}
+                            Chargeur / Batterie
+                        {% elif materiel.type == "consommable" %}
+                            Consommable
+                        {% elif materiel.type == "regie_accessoire" %}
+                            Accesoire (Régie)
                         {% else %}
                             /!\ {{ materiel.type }}
                         {% endif %}
