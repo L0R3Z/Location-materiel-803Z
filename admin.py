@@ -108,6 +108,39 @@ def admin_addMateriel():
     else:
         return redirect(url_for("admin.admin_connexion"))
 
+@admin.route("/manageMateriel/archiveMateriel", methods=['POST'])
+def admin_archiveMateriel():
+    admin_id = session.get("admin_id")
+    # If the admin_id isn't empty, it means that the admin is connected
+    if admin_id:
+        try:
+            if request.form['id_materiel'] and request.form['archive'] and request.form['start']:
+                archive = bool(int(request.form['archive']))
+                archive = 1 if archive == False else 0
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                print("inside admin_archiveMateriel   ")
+                tempQuery = '''
+                    UPDATE Materiel SET archive = %s 
+                    WHERE id_materiel = %s
+                '''
+                mycursor.execute(tempQuery, (archive, str(request.form['id_materiel'])))
+                mydb.commit()
+                mycursor.close()
+                if request.form['start'] == str(0):
+                    return redirect(url_for("admin.admin_manageMateriel"))
+                else:
+                     return redirect(url_for('admin.admin_editMateriel', id_materiel=request.form['id_materiel']))
+            else:
+                e = "Erreur : pas d'ID de matériel renseigné pour la suprression"
+                return render_template("pages/admin.html", error=str(e))
+        except Exception as e: # If the query fails, render the template with a user-friendly error message
+            return render_template("pages/admin.html", error=str(e))
+    # If it's empty, it means that the admin isn't connected
+    # If so, redirect to the admin connection page
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+
 @admin.route("/manageMateriel/deleteMateriel", methods=['POST'])
 def admin_deleteMateriel():
     admin_id = session.get("admin_id")
@@ -157,7 +190,8 @@ def admin_editMateriel():
                         m.modele,
                         m.description,
                         m.image,
-                        m.remarque
+                        m.remarque,
+                        m.archive
                     FROM Materiel m
                     WHERE m.id_materiel = %s;
                 '''
@@ -232,6 +266,7 @@ def admin_get_all_materiel():
                 m.description,
                 m.image,
                 m.remarque,
+                m.archive,
                 (
                     SELECT 
                         CASE

@@ -71,7 +71,11 @@
                         </td>
                         <td>{{ materiel.remarque }}</td>
                         <td>
-                            Archivé ?
+                            {% if materiel.archive == 1 %}
+                                Archivé
+                            {% else %}
+                                Visible
+                            {% endif %}
                         </td>
                         <td>
                             <form method="GET" action="{{ url_for('admin.admin_manageMateriel') }}editMateriel">
@@ -82,7 +86,13 @@
                         <td>
                             <form method="POST" class="archiveMateriel" action="{{ url_for('admin.admin_manageMateriel') }}archiveMateriel">
                                 <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
-                                <input type="submit" name="archiveMateriel" value="Archiver" onclick="return confirm('Êtes-vous sûr de vouloir archiver le matériel &quot;{{materiel.modele}}&quot; ?')"/>
+                                <input type="hidden" name="archive" value="{{ materiel.archive }}">
+                                <input type="hidden" name="start" value="0">
+                                {% if materiel.archive == 0 %}
+                                    <input type="submit" name="archiveMateriel" value="Archiver" onclick="return confirm('Êtes-vous sûr de vouloir archiver le matériel &quot;{{materiel.modele}}&quot; ?')"/>
+                                {% else %}
+                                    <input type="submit" name="archiveMateriel" value="Désarchiver" onclick="return confirm('Êtes-vous sûr de vouloir désarchiver le matériel &quot;{{materiel.modele}}&quot; ?')"/>
+                                {% endif %}
                             </form>
                         </td>
                         <td>
@@ -149,6 +159,7 @@
 <script>
     // DOM Elements
     const deleteButtons = document.querySelector(".deleteMateriel");
+    const archiveButtons = document.querySelector(".archiveMateriel");
 
     // To do when clicking on a delete button
     function deleteHandler(event) {
@@ -156,6 +167,12 @@
             event.preventDefault();
         }
     }
+    function archiveHandler(event) {
+        if (!confirm('Êtes-vous sûr de vouloir modifier la visibilité de ce matériel ?')) {
+            event.preventDefault();
+        }
+    }
 
     deleteButtons.forEach(button => {button.addEventListener("submit", deleteHandler)});
+    archiveButtons.forEach(button => {button.addEventListener("submit", archiveHandler)});
 </script>
