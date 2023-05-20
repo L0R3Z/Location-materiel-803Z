@@ -274,7 +274,9 @@ def admin_get_all_materiel():
                             ELSE NULL
                         END
                     FROM Reservations_Materiel rm
+                    JOIN Reservations r ON rm.id_reservation = r.id_reservation
                     WHERE rm.id_materiel = m.id_materiel
+                    AND ((rm.rendu = 0 OR rm.defaut = 1) AND r.archive = 0)
                 ) AS defaut,
                 (
                     SELECT 
@@ -285,7 +287,7 @@ def admin_get_all_materiel():
                     FROM Reservations r
                     JOIN Reservations_Materiel rm ON r.id_reservation = rm.id_reservation
                     WHERE rm.id_materiel = m.id_materiel
-                    AND (rm.rendu = 0 OR rm.defaut = 1)
+                    AND ((rm.rendu = 0 OR rm.defaut = 1) AND r.archive = 0)
                 ) AS dates_debut,
                 (
                     SELECT 
@@ -296,7 +298,7 @@ def admin_get_all_materiel():
                     FROM Reservations r
                     JOIN Reservations_Materiel rm ON r.id_reservation = rm.id_reservation
                     WHERE rm.id_materiel = m.id_materiel
-                    AND (rm.rendu = 0 OR rm.defaut = 1)
+                    AND ((rm.rendu = 0 OR rm.defaut = 1) AND r.archive = 0)
                 ) AS dates_fin,
                 (
                     SELECT 
@@ -305,7 +307,9 @@ def admin_get_all_materiel():
                             ELSE NULL
                         END
                     FROM Reservations_Materiel rm
+                    JOIN Reservations r ON rm.id_reservation = r.id_reservation
                     WHERE rm.id_materiel = m.id_materiel
+                    AND ((rm.rendu = 0 OR rm.defaut = 1) AND r.archive = 0)
                 ) AS id_reservation
             FROM Materiel m;
             ''')
