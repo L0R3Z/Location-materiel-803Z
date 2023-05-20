@@ -360,6 +360,57 @@ def admin_managereservation(id_reservation=None):
             return render_template("pages/admin.html", error=str(e))
     else:
         return redirect(url_for("admin.admin_connexion"))
+    
+@admin.route("/managereservation/deletereservation/<int:id_reservation>", methods=['DELETE'])
+def admin_deletereservation(id_reservation=None):
+    admin_id = session.get("admin_id")
+    if admin_id:
+        try:
+            print(id_reservation)
+            if id_reservation:
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                tempQuery = '''DELETE FROM Reservations_Materiel WHERE id_reservation = %s;'''
+                mycursor.execute(tempQuery, (id_reservation,))
+                tempQuery = '''DELETE FROM Contacts WHERE id_reservation = %s;'''
+                mycursor.execute(tempQuery, (id_reservation,))
+                tempQuery = '''DELETE FROM Projets WHERE id_reservation = %s;'''
+                mycursor.execute(tempQuery, (id_reservation,))
+                mydb.commit()
+                tempQuery = '''DELETE FROM Reservations WHERE id_reservation = %s;'''
+                mycursor.execute(tempQuery, (id_reservation,))
+                mydb.commit()
+                mycursor.close()
+                return {"message": "Réservation supprimée avec succès !"}
+            else:
+                return {"error": "Erreur : pas d'ID de matériel renseigné pour la suppression"}
+        except Exception as e:
+            return {"error": e}
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+    
+@admin.route("/managereservation/archivereservation/<int:id_reservation>", methods=['UPDATE'])
+def admin_archivereservation(id_reservation=None):
+    admin_id = session.get("admin_id")
+    if admin_id:
+        try:
+            if id_reservation:
+                # archive = bool(int(request.form['archive']))
+                # archive = 1 if archive == False else 0
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                print("inside admin_archiveReservation   ")
+                tempQuery = '''UPDATE Reservations SET archive = 1 WHERE id_reservation = %s'''
+                mycursor.execute(tempQuery, (id_reservation,))
+                mydb.commit()
+                mycursor.close()
+                return {"message": "Réservation archivée avec succès !"}
+            else:
+                return {"error": "Erreur : pas d'ID de matériel renseigné pour archiver"}
+        except Exception as e:
+            return {"error": e}
+    else:
+        return redirect(url_for("admin.admin_connexion"))
 
 # @admin.route("/managereservation/edit")
 # def admin_editreservation():
