@@ -14,7 +14,7 @@
                 <th>Sortie</th>
                 <th>Date de Restitution</th>
                 <th>Retour complet</th>
-                <th>Etat</th>
+                <th>Archivée ?</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -32,7 +32,7 @@
                 <td>{{ reservation.archive }}</td>
                 <td>
                     <a href="{{ url_for('admin.admin_managereservation', id_reservation=reservation.id_reservation) }}">
-                        Modifier {{ reservation.id_reservation }}
+                        <button>Modifier</button>
                     </a>
                 </td>
                 <td>
