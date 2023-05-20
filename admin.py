@@ -356,3 +356,65 @@ def admin_manageReservation():
     # If so, redirect to the admin connection page
     else:
         return redirect(url_for("admin.admin_connexion"))
+
+@admin.route("/manageMateriel/deleteReservation", methods=['POST'])
+def admin_deleteReservation():
+    admin_id = session.get("admin_id")
+    # If the admin_id isn't empty, it means that the admin is connected
+    if admin_id:
+        try:
+            if request.form['id_reservation']:
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                print("inside admin_deleteReservation   ")
+                tempQuery = '''
+                    DELETE FROM Reservations_Materiel WHERE id_reservation = %s;
+                '''
+                mycursor.execute(tempQuery, (request.form['id_reservation'],))
+                mydb.commit()
+                tempQuery = '''
+                    DELETE FROM Reservations WHERE id_reservation = %s;
+                '''
+                mycursor.execute(tempQuery, (request.form['id_reservation'],))
+                mydb.commit()
+                mycursor.close()
+                return redirect(url_for("admin.admin_manageReservation"))
+            else:
+                e = "Erreur : pas d'ID de matériel renseigné pour la suprression"
+                return render_template("pages/admin.html", error=str(e))
+        except Exception as e: # If the query fails, render the template with a user-friendly error message
+            return render_template("pages/admin.html", error=str(e))
+    # If it's empty, it means that the admin isn't connected
+    # If so, redirect to the admin connection page
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+    
+@admin.route("/manageReservation/archiveReservation", methods=['POST'])
+def admin_archiveReservation():
+    admin_id = session.get("admin_id")
+    # If the admin_id isn't empty, it means that the admin is connected
+    if admin_id:
+        try:
+            if request.form['id_reservation'] and request.form['archive']:
+                archive = bool(int(request.form['archive']))
+                archive = 1 if archive == False else 0
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                print("inside admin_archiveReservation   ")
+                tempQuery = '''
+                    UPDATE Reservations SET archive = %s 
+                    WHERE id_reservation = %s
+                '''
+                mycursor.execute(tempQuery, (archive, str(request.form['id_reservation'])))
+                mydb.commit()
+                mycursor.close()
+                return redirect(url_for("admin.admin_manageReservation"))
+            else:
+                e = "Erreur : pas d'ID de matériel renseigné pour la suprression"
+                return render_template("pages/admin.html", error=str(e))
+        except Exception as e: # If the query fails, render the template with a user-friendly error message
+            return render_template("pages/admin.html", error=str(e))
+    # If it's empty, it means that the admin isn't connected
+    # If so, redirect to the admin connection page
+    else:
+        return redirect(url_for("admin.admin_connexion"))
