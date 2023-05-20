@@ -142,7 +142,7 @@
                                 <ul>
                                 {% set id_reservation_list = materiel.id_reservation.split(',') %}
                                 {% for element in id_reservation_list %}
-                                    <li>{{ element }}</li>
+                                    <a href="{{ url_for('admin.admin_managereservation', id_reservation=element) }}">{{ element }}</a>
                                 {% endfor %}
                                 </ul>
                             {% else %}

@@ -29,9 +29,9 @@
                         <td>{{ reservation.retour_complet }}</td>
                         <td>{{ reservation.archive }}</td>
                         <td>
-                            <form method="POST" action="{{ url_for('admin.admin_manageReservation') }}/editReservation/{{ reservation.id_reservation }}">
-                                <input type="submit" name="editReservation" value="Modifier {{reservation.retour_complet}}"/>
-                            </form>
+                            <a href="{{ url_for('admin.admin_managereservation', id_reservation=reservation.id_reservation) }}">
+                                Modifier {{ reservation.id_reservation }}
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}
