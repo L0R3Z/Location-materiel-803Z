@@ -6,7 +6,7 @@ Pour le 20/05 :
     - Partie utilisateur
         [CHECKED] Ajouter des filtres de recherche pour le matériel (en fonction du type et de la dispo...)
         [CHECKED] Pouvoir faire une réservation de matériel
-        - Mettre à jour la vue après une recherche
+        [CHECKED] Mettre à jour la vue après une recherche
     
     - Bug
         [CHECKED] Téléphone lors de l'insertion de la réservation
@@ -16,12 +16,13 @@ Pour le 20/05 :
 
 Tout
     - Error handling
+        - Bien vérifier si les données sont présente avant de lancer les requêtes
         - Bien vérifier les types des données avant de lancer les requêtes
-        - Bien vérifier la longueur
+        - Bien vérifier la longueur (si besoin) avant de lancer les requêtes
 
     - Partie utilisateur
         [CHECKED] Ajouter des filtres de recherche pour le matériel (en fonction du type et de la dispo...)
-        - Pouvoir faire une réservation de matériel (onepage)
+        [CHECKED] Pouvoir faire une réservation de matériel (onepage)
             [CHECKED] Sélectionner du matériel depuis la liste
             [CHECKED] Renseigner les informations de réservation (dates, ...)
             [CHECKED] Renseigner un ou plusieurs contacts
@@ -36,9 +37,9 @@ Tout
         - Pouvoir gérer le matériel depuis le back admin
             [CHECKED] Afficher la liste de matériel
             [CHECKED] Ajouter du matériel
-            - Moduler la fonction d'ajout de matériel
-            - Supprimer du matériel
-            - Modifier du matériel
+            [CHECKED] Moduler la fonction d'ajout de matériel
+            [CHECKED] Supprimer du matériel
+            [CHECKED] Modifier du matériel
         - Pouvoir gérer les réservations depuis le back admin
             [CHECKED] Afficher la liste des réservations
             - Noter une réservation comme rendue, partiellement rendue, indiquer la date de restitution, décaler la date de fin...

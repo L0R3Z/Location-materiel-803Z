@@ -3,6 +3,10 @@ from utility import encrypt_password
 
 admin = Blueprint("admin", __name__)
 
+#########
+# admin #
+#########
+
 @admin.route("/")
 def index():
     admin_id = session.get("admin_id")
@@ -60,6 +64,10 @@ def check_admin_username_passwd(username, passwd):
     except Exception as e:
         print(e)
         raise Exception("Erreur lors de la tentative de connexion") from e
+
+##################
+# manageMateriel #
+##################
 
 @admin.route("/manageMateriel/")
 def admin_manageMateriel():
@@ -182,7 +190,7 @@ def admin_editMateriel():
             if 'id_materiel' in request.args:
                 mydb = current_app.config['mydb']
                 mycursor = mydb.cursor()
-                print("inside admin_editMateriel   ")
+                print("inside admin_editMateriel")
                 tempQuery = '''
                     SELECT
                         m.id_materiel,
@@ -321,38 +329,88 @@ def admin_get_all_materiel():
     except Exception as e: # Raise an exception if the request fails. This allows us to display the error message to the user.
         print(e)
         raise Exception("Erreur : impossible de récupérer la liste de matériel") from e
-    
+
+
+#####################
+# manageReservation #
+#####################
+
+@admin.route("/managereservations/")
+def admin_managereservations():
+    admin_id = session.get("admin_id")
+    if admin_id:
+        try:
+            reservation_list = admin_get_all_reservation()
+            return render_template("pages/admin_manageReservation.html", reservation_list=reservation_list)
+        except Exception as e:
+            return render_template("pages/admin.html", error=str(e))
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+
+@admin.route("/managereservation/")
+@admin.route("/managereservation/?id=<int:id_reservation>")
+def admin_managereservation(id_reservation=None):
+    admin_id = session.get("admin_id")
+    if admin_id:
+        try:
+            reservation_data = admin_get_reservation_by_id(id_reservation)
+            print(reservation_data)
+            return render_template("pages/admin_editReservation.html", reservation_data=reservation_data)
+        except Exception as e:
+            return render_template("pages/admin.html", error=str(e))
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+
+# @admin.route("/managereservation/edit")
+# def admin_editreservation():
+#     admin_id = session.get("admin_id")
+#     if admin_id:
+#         try:
+#             reservationId = request.args.get('id_reservation')
+#             reservation_data = admin_get_reservation_by_id(reservationId)
+#             return render_template("pages/admin_editReservation.html", reservation_data=reservation_data)
+#         except Exception as e:
+#             return render_template("pages/admin.html", error=str(e))
+#     else:
+#         return redirect(url_for("admin.admin_connexion"))
 
 def admin_get_all_reservation():
     try:
         mydb = current_app.config['mydb']
         mycursor = mydb.cursor()
-        print("inside admin_get_all_reservation  ")
-        # For performance and code maintainability reasons, it's better to specify the fields to SELECT rather than using "SELECT *"
-        mycursor.execute('''SELECT id_reservation, date_debut, date_fin, sortie, date_restitution, retour_complet, archive FROM Reservations ORDER BY date_debut
+        mycursor.execute('''
+            SELECT
+                id_reservation, date_debut, date_fin, sortie, date_restitution, retour_complet, archive
+            FROM
+                Reservations
+            ORDER BY
+                date_debut
             ''')
         rows = mycursor.fetchall()
-        # Convert the returned tuples into a well-organized dict with named properties
         reservation_list = [dict(zip(mycursor.column_names, row)) for row in rows]
         mycursor.close()
         return reservation_list
-    except Exception as e: # Raise an exception if the request fails. This allows us to display the error message to the user.
+    except Exception as e:
         print(e)
         raise Exception("Erreur : impossible de récupérer la liste de réservations") from e
 
-
-
-@admin.route("/manageReservation/")
-def admin_manageReservation():
-    admin_id = session.get("admin_id")
-    # If the admin_id isn't empty, it means that the admin is connected
-    if admin_id:
-        try:
-            reservation_list = admin_get_all_reservation()
-            return render_template("pages/admin_manageReservation.html", reservation_list=reservation_list)
-        except Exception as e: # If the query fails, render the template with a user-friendly error message
-            return render_template("pages/admin.html", error=str(e))
-    # If it's empty, it means that the admin isn't connected
-    # If so, redirect to the admin connection page
-    else:
-        return redirect(url_for("admin.admin_connexion"))
+def admin_get_reservation_by_id(id):
+    try:
+        mydb = current_app.config['mydb']
+        mycursor = mydb.cursor()
+        tempQuery = '''
+            SELECT
+                id_reservation, date_debut, date_fin, sortie, date_restitution, retour_complet, archive
+            FROM
+                Reservations
+            WHERE
+                id_reservation = %s
+            '''
+        mycursor.execute(tempQuery, (id, ))
+        rows = mycursor.fetchall()
+        reservation = [dict(zip(mycursor.column_names, row)) for row in rows]
+        mycursor.close()
+        return reservation[0]
+    except Exception as e:
+        print(e)
+        raise Exception("Erreur : impossible de récupérer les données actuelles de la réservation") from e

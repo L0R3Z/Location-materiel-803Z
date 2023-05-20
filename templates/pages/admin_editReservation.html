@@ -1,0 +1,31 @@
+{% extends "./base.html" %}
+{% block content %}
+    {% if not reservation_data %}
+        <p>Aucune réservation trouvée</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <!-- date_debut, date_fin, sortie, date_restitution, retour_complet, archive -->
+                    <th>Date début</th>
+                    <th>Date fin</th>
+                    <th>Sortie</th>
+                    <th>Date de Restitution</th>
+                    <th>Retour complet</th>
+                    <th>Etat</th>
+                    <!-- <th>Supprimer ?</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background-color: lightgrey;">
+                    <td>{{ reservation_data.date_debut }}</td>
+                    <td>{{ reservation_data.date_fin }}</td>
+                    <td>{{ reservation_data.sortie }}</td>
+                    <td>{{ reservation_data.date_restitution }}</td>
+                    <td>{{ reservation_data.retour_complet }}</td>
+                    <td>{{ reservation_data.archive }}</td>
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
