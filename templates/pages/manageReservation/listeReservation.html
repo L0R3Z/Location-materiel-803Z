@@ -1,55 +1,95 @@
-<div class="materiel__container">
+<div class="reservation__container">
     <h3>Liste des réservations</h3>
     <!-- We use <table> to display our data because it's a better practice in terms of accessibility (built-in support for screen readers) -->
     {% if not reservation_list %}
-        <p>Aucune réservation trouvée</p>
+    <p>Aucune réservation trouvée</p>
     {% else %}
-        <table>
-            <thead>
-                <tr>
+    <table>
+        <thead>
+            <tr>
 
-                    <!-- date_debut, date_fin, sortie, date_restitution, retour_complet, archive -->
-                    <th>Date début</th>
-                    <th>Date fin</th>
-                    <th>Sortie</th>
-                    <th>Date de Restitution</th>
-                    <th>Retour complet</th>
-                    <th>Etat</th>
-                    <th>Modifier ?</th>
-                    <!-- <th>Supprimer ?</th> -->
-                </tr>
-            </thead>
-            <tbody>
-                {% for reservation in reservation_list %}
-                    <tr style="background-color: lightgrey;">
-                        <td>{{ reservation.date_debut }}</td>
-                        <td>{{ reservation.date_fin }}</td>
-                        <td>{{ reservation.sortie }}</td>
-                        <td>{{ reservation.date_restitution }}</td>
-                        <td>{{ reservation.retour_complet }}</td>
-                        <td>{{ reservation.archive }}</td>
-                        <td>
-                            <a href="{{ url_for('admin.admin_managereservation', id_reservation=reservation.id_reservation) }}">
-                                Modifier {{ reservation.id_reservation }}
-                            </a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                <!-- date_debut, date_fin, sortie, date_restitution, retour_complet, archive -->
+                <th>Date début</th>
+                <th>Date fin</th>
+                <th>Sortie</th>
+                <th>Date de Restitution</th>
+                <th>Retour complet</th>
+                <th>Etat</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <!-- <th>Supprimer ?</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservation_list %}
+            <tr style="background-color: lightgrey;">
+                <td>{{ reservation.date_debut }}</td>
+                <td>{{ reservation.date_fin }}</td>
+                <td>{{ reservation.sortie }}</td>
+                <td>{{ reservation.date_restitution }}</td>
+                <td>{{ reservation.retour_complet }}</td>
+                <td>{{ reservation.archive }}</td>
+                <td>
+                    <a href="{{ url_for('admin.admin_managereservation', id_reservation=reservation.id_reservation) }}">
+                        Modifier {{ reservation.id_reservation }}
+                    </a>
+                </td>
+                <td>
+                    <button class="reserv_archive" data-id="{{ reservation.id_reservation }}">Archiver</button>
+                </td>
+                <td>
+                    <button class="reserv_delete" data-id="{{ reservation.id_reservation }}">Supprimer</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     {% endif %}
 </div>
 
 <script>
     // DOM Elements
-    // const deleteButtons = document.querySelector(".deleteReservation");
+    const archiveButtons = document.querySelectorAll(".reserv_archive");
+    const deleteButtons = document.querySelectorAll(".reserv_delete");
 
-    // // To do when clicking on a delete button
-    // function deleteHandler(event) {
-    //     if (!confirm('Êtes-vous sûr de vouloir supprimer ce matériel ?')) {
-    //         event.preventDefault();
-    //     }
-    // }
+    // To do when clicking on a archive button
+    async function archiveHandler(e) {
+        if (confirm('Êtes-vous sûr de vouloir archiver cette réservation ?')) {
+            id = e.target.dataset.id;
+            const response = await fetch(`/admin/managereservation/archivereservation/${id}`, {
+                method: 'UPDATE',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+    
+            if (data.error) console.log(data.error);
+            else if (data.message) console.log(data.message);
+        }
+    }
 
-    // deleteButtons.forEach(button => {button.addEventListener("submit", deleteHandler)});
+    // To do when clicking on a delete button
+    async function deleteHandler(e) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')) {
+            id = e.target.dataset.id;
+            const response = await fetch(`/admin/managereservation/deletereservation/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+    
+            if (data.error) console.log(data.error);
+            else if (data.message) console.log(data.message);
+        }
+    }
+
+    // Listeners
+    archiveButtons.forEach(button => button.addEventListener("click", archiveHandler));
+    deleteButtons.forEach(button => button.addEventListener("click", deleteHandler));
 </script>
