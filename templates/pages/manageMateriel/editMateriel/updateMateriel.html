@@ -8,35 +8,41 @@
                 <label for="type">Type : </label>
                 <select id="type" name="type" required>
                     <optgroup label="Image">
-                        <option value="boitiers" {% if materiel.type == 'boitiers' %}selected{% endif %}>Boîtiers</option>
-                        <option value="optiques" {% if materiel.type == 'optiques' %}selected{% endif %}>Optiques</option>
-                        <option value="accessoiresstockage" {% if materiel.type == 'accessoiresstockage' %}selected{% endif %}>Accessoires / Stockage</option>
+                        <option value="boitier" {% if materiel.type == 'boitier' %}selected{% endif %}>Boîtier</option>
+                        <option value="optique" {% if materiel.type == 'optique' %}selected{% endif %}>Optique</option>
+                        <option value="accessoirestockage" {% if materiel.type == 'accessoirestockage' %}selected{% endif %}>Accessoire / Stockage</option>
+                        <option value="machinerie" {% if materiel.type == 'machinerie' %}selected{% endif %}>Machinerie</option>
                     </optgroup>
                     <optgroup label="Son">
-                        <option value="enregistreurs" {% if materiel.type == 'enregistreurs' %}selected{% endif %}>Enregistreurs</option>
-                        <option value="micros" {% if materiel.type == 'micros' %}selected{% endif %}>Micros</option>
-                        <option value="son_accessoires" {% if materiel.type == 'son_accessoires' %}selected{% endif %}>Accessoires</option>
+                        <option value="enregistreur" {% if materiel.type == 'enregistreur' %}selected{% endif %}>Enregistreur</option>
+                        <option value="micro" {% if materiel.type == 'micro' %}selected{% endif %}>Micro</option>
+                        <option value="son_accessoire" {% if materiel.type == 'son_accessoire' %}selected{% endif %}>Accessoire</option>
                     </optgroup>
                     <optgroup label="Lumière">
-                        <option value="lumieres" {% if materiel.type == 'lumieres' %}selected{% endif %}>Lumières</option>
-                        <option value="lumiere_accessoire" {% if materiel.type == 'lumiere_accessoire' %}selected{% endif %}>Accessoires</option>
-                        <option value="fonds" {% if materiel.type == 'fonds' %}selected{% endif %}>Fonds</option>
+                        <option value="lumiere" {% if materiel.type == 'lumiere' %}selected{% endif %}>Lumière</option>
+                        <option value="lumiere_accessoire" {% if materiel.type == 'lumiere_accessoire' %}selected{% endif %}>Accessoire</option>
+                        <option value="fond" {% if materiel.type == 'fond' %}selected{% endif %}>Fond</option>
+                        <option value="gelatine" {% if materiel.type == 'gelatine' %}selected{% endif %}>Gélatine</option>
                     </optgroup>
                     <optgroup label="Connectiques & Batteries">
-                        <option value="cables" {% if materiel.type == 'cables' %}selected{% endif %}>Câbles</option>
-                        <option value="chargeursbatteries" {% if materiel.type == 'chargeursbatteries' %}selected{% endif %}>Chargeurs / Batteries</option>
+                        <option value="cable" {% if materiel.type == 'cable' %}selected{% endif %}>Câble</option>
+                        <option value="chargeurbatterie" {% if materiel.type == 'chargeurbatterie' %}selected{% endif %}>Chargeur / Batterie</option>
+                    </optgroup>
+                    <optgroup label="Régie">
+                        <option value="consommable" {% if materiel.type == 'consommable' %}selected{% endif %}>Consommable</option>
+                        <option value="regie_accessoire" {% if materiel.type == 'regie_accessoire' %}selected{% endif %}>Accessoire</option>
                     </optgroup>
                 </select>
                 <label for="modele">Modèle : </label>
-                <input type="text" name="modele" id="modele" placeholder="GoPro de la mort qui tue" value="{{ materiel.modele }}" required/>
+                <input type="text" name="modele" id="modele" placeholder="Canon 550D" value="{{ materiel.modele }}" required/>
             </div>
             <div>
                 <label for="description">Description : </label>
-                <textarea name="description" id="description" rows="1" cols="50" placeholder="Focale trop cool" >{{ materiel.description }}</textarea>
+                <textarea name="description" id="description" rows="1" cols="50" placeholder="Monture : Canon EF" >{{ materiel.description }}</textarea>
             </div>
             <div>
                 <label for="image">URL de l'image : </label><input type="text" name="image" id="image" placeholder="https://www.europe-nature-optik.fr/884-tm_thickbox_default/kite-trepied-ardea-cf-avec-rotule-manfrotto-128rc.jpg" value="{% if materiel.image %}{{ materiel.image }}{% else %}{% endif %}" />
-                <label for="remarque">Remarque : </label><input type="text" name="remarque" id="remarque" placeholder="Support non-inclus" value="{{ materiel.remarque }}" />
+                <label for="remarque">Remarque : </label><input type="text" name="remarque" id="remarque" placeholder="Carte SD non-incluse" value="{{ materiel.remarque }}" />
             </div>
             <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
             <div>

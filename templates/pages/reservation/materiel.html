@@ -7,95 +7,102 @@
             <option value=""></option>
             <optgroup label="Image">
                 <option value="boitier">Boîtiers</option>
-                <option value="optiques">Optiques</option>
-                <option value="accessoiresstockage">Accessoires / Stockage</option>
+                <option value="optique">Optiques</option>
+                <option value="accessoirestockage">Accessoires / Stockage</option>
+                <option value="machinerie">Machinerie</option>
             </optgroup>
             <optgroup label="Son">
-                <option value="enregistreurs">Enregistreurs</option>
-                <option value="micros">Micros</option>
-                <option value="son_accessoires">Accessoires</option>
+                <option value="enregistreur">Enregistreurs</option>
+                <option value="micro">Micros</option>
+                <option value="son_accessoire">Accessoires</option>
             </optgroup>
             <optgroup label="Lumière">
-                <option value="lumieres">Lumières</option>
+                <option value="lumiere">Lumières</option>
                 <option value="lumiere_accessoire">Accessoires</option>
-                <option value="fonds">Fonds</option>
+                <option value="fond">Fonds</option>
+                <option value="gelatine">Gélatines</option>
             </optgroup>
             <optgroup label="Connectiques & Batteries">
-                <option value="cables">Câbles</option>
-                <option value="chargeursbatteries">Chargeurs / Batteries</option>
+                <option value="cable">Câbles</option>
+                <option value="chargeurbatterie">Chargeurs / Batteries</option>
+            </optgroup>
+            <optgroup label="Régie">
+                <option value="consommable">Consommables</option>
+                <option value="regie_accessoire">Accessoires</option>
             </optgroup>
         </select>
         <button class="recherche_button">Rechercher</button>
     </div>
-    
+
     <!-- We use <table> to display our data because it's a better practice in terms of accessibility (built-in support for screen readers) -->
     {% if not materiel_list %}
-        <p>Aucun matériel trouvé.</p>
+    <p>Aucun matériel trouvé.</p>
     {% else %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Réserver</th>
-                    <th>Type</th>
-                    <th>Modele</th>
-                    <th>Description</th>
-                    <th>Image</th>
-                    <th>Remarque</th>
-                    <th>Emprunté jusqu'au...</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for materiel in materiel_list %}
+    <table>
+        <thead>
+            <tr>
+                <th>Réserver</th>
+                <th>Type</th>
+                <th>Modele</th>
+                <th>Description</th>
+                <th>Image</th>
+                <th>Remarque</th>
+                <th>Emprunté jusqu'au...</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for materiel in materiel_list %}
+            {% if materiel.disponible %}
+            <tr style="background-color: green;">
+                {% else %}
+            <tr style="background-color: red;">
+                {% endif %}
+                <td>
                     {% if materiel.disponible %}
-                        <tr style="background-color: green;">
+                    <input class="reserv_checkbox" id="{{ materiel.id_materiel }}" type="checkbox">
                     {% else %}
-                        <tr style="background-color: red;">
+                    <input type="checkbox" disabled>
                     {% endif %}
-                        <td>
-                            {% if materiel.disponible %}
-                                <input class="reserv_checkbox" id="{{ materiel.id_materiel }}" type="checkbox">
-                            {% else %}
-                                <input type="checkbox" disabled>
-                            {% endif %}
-                        </td>
-                        <td>{{ materiel.type }}</td>
-                        <td>{{ materiel.modele }}</td>
-                        <td>{{ materiel.description }}</td>
-                        <td>
-                            {% if materiel.image %}
-                                <img style="max-width: 150px;" src="{{ materiel.image }}">
-                            {% else %}
-                                pas d'image...
-                            {% endif %}
-                        </td>
-                        <td>{{ materiel.remarque }}</td>
-                        <td>
-                            {% if materiel.date_retour %}
-                                {{ materiel.date_retour }}            
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </td>
+                <td>{{ materiel.type }}</td>
+                <td>{{ materiel.modele }}</td>
+                <td>{{ materiel.description }}</td>
+                <td>
+                    {% if materiel.image %}
+                    <img style="max-width: 150px;" src="{{ materiel.image }}">
+                    {% else %}
+                    pas d'image...
+                    {% endif %}
+                </td>
+                <td>{{ materiel.remarque }}</td>
+                <td>
+                    {% if materiel.date_retour %}
+                    {{ materiel.date_retour }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     {% endif %}
 </div>
 
 <script>
     // DOM Elements
-    const reservCheckbox = document.querySelectorAll(".reserv_checkbox");
+    let reservCheckbox = document.querySelectorAll(".reserv_checkbox");
     const rechercheDispo = document.querySelector(".recherche_dispo");
     const rechercheType = document.querySelector(".recherche_type");
     const rechercheButton = document.querySelector(".recherche_button");
 
     // To do when clicking on a checkbox
     function checkboxHandler() {
+        console.log("inside checkboxHandler")
         // If at least one checkbox is checked, display the reservDiv containing the reservation button
         isChecked = (Array.from(reservCheckbox)).some(checkbox => {
             return checkbox.checked;
         });
 
-        if(isChecked) reservDiv.classList.remove("hidden");
+        if (isChecked) reservDiv.classList.remove("hidden");
         else reservDiv.classList.add("hidden");
     }
 
@@ -107,7 +114,7 @@
     // Get all search parameters organized
     function getAllSearchParameters() {
         checkedValue = 0;
-        if(rechercheDispo.checked) checkedValue = 1;
+        if (rechercheDispo.checked) checkedValue = 1;
         return {
             dispo: checkedValue,
             type: rechercheType.value
@@ -123,7 +130,8 @@
         // Give the reservation data to the back
         const response = await fetch("/reservation/searchmateriel", {
             method: 'POST',
-            headers: {'Accept': 'application/json, text/plain, */*',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(parameters)
@@ -132,14 +140,69 @@
 
         console.log(data);
 
-        if(data.error) console.log(data.error);
-        else if(data.message) console.log(data.message);
-        else console.log("it's all good, man");
+        if (data.error) console.log(data.error);
+        else if (data.message) console.log(data.message);
+        else generateTableFromJSON(data)
     }
 
-    
-    
-    reservCheckbox.forEach(checkbox => {checkbox.addEventListener("click", checkboxHandler)});
+    function generateTableFromJSON(data) {
+        var tableBody = document.querySelector("tbody"); // Sélectionnez l'élément tbody de votre table
+
+        // Effacer le contenu existant du tableau
+        tableBody.innerHTML = "";
+
+        // Parcourir les données et générer les lignes du tableau
+        data.materiel.forEach((materiel) => {
+            var row = document.createElement("tr"); // Créer une nouvelle ligne
+
+            // Ajouter les cellules avec les données appropriées
+            var reservCell = document.createElement("td");
+            if (materiel.disponible) {
+                var checkbox = document.createElement("input");
+                checkbox.setAttribute("type", "checkbox");
+                checkbox.setAttribute("class", "reserv_checkbox");
+                checkbox.setAttribute("id", materiel.id_materiel);
+                checkbox.addEventListener("click", checkboxHandler);
+                reservCell.appendChild(checkbox);
+                row.style.backgroundColor = "green"; // à remplacer par une classe !
+            } else {
+                var disabledCheckbox = document.createElement("input");
+                disabledCheckbox.setAttribute("type", "checkbox");
+                disabledCheckbox.setAttribute("disabled", true);
+                reservCell.appendChild(disabledCheckbox);
+                row.style.backgroundColor = "red"; // à remplacer par une classe !
+            }
+            row.appendChild(reservCell);
+
+            if (rechercheDispo.checked) var columns = ["type", "modele", "description", "image", "remarque"];
+            else var columns = ["type", "modele", "description", "image", "remarque", "date_retour"];
+            columns.forEach((column) => {
+                var cell = document.createElement("td");
+                if (column == "image") {
+                    if (materiel[column]) {
+                        var img = document.createElement("img");
+                        img.setAttribute("src", materiel[column]);
+                        img.style.maxWidth = "150px";
+                        cell.appendChild(img);
+                    } else {
+                        cell.textContent = "pas d'image...";
+                    }
+                } else if (column == "date_retour") {
+                    if(materiel[column]) cell.textContent = (new Date(materiel[column])).toISOString().split('T')[0];
+                    else cell.textContent = "";
+                    
+                } else {
+                    cell.textContent = materiel[column] || "";
+                }
+                row.appendChild(cell);
+            });
+
+            tableBody.appendChild(row); // Ajouter la ligne au tableau
+            reservCheckbox = document.querySelectorAll(".reserv_checkbox");
+        });
+    }
+
+    reservCheckbox.forEach(checkbox => { checkbox.addEventListener("click", checkboxHandler) });
     rechercheButton.addEventListener("click", rechercheHandler);
 
 </script>
