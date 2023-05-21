@@ -3,6 +3,10 @@ from utility import encrypt_password
 
 admin = Blueprint("admin", __name__)
 
+#########
+# admin #
+#########
+
 @admin.route("/")
 def index():
     admin_id = session.get("admin_id")
@@ -61,6 +65,10 @@ def check_admin_username_passwd(username, passwd):
         print(e)
         raise Exception("Erreur lors de la tentative de connexion") from e
 
+##################
+# manageMateriel #
+##################
+
 @admin.route("/manageMateriel/")
 def admin_manageMateriel():
     admin_id = session.get("admin_id")
@@ -100,6 +108,39 @@ def admin_addMateriel():
                 return redirect(url_for("admin.admin_manageMateriel"))
             else:
                 e = "Erreur : données manquantes pour insérer ce matériel"
+                return render_template("pages/admin.html", error=str(e))
+        except Exception as e: # If the query fails, render the template with a user-friendly error message
+            return render_template("pages/admin.html", error=str(e))
+    # If it's empty, it means that the admin isn't connected
+    # If so, redirect to the admin connection page
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+
+@admin.route("/manageMateriel/archiveMateriel", methods=['POST'])
+def admin_archiveMateriel():
+    admin_id = session.get("admin_id")
+    # If the admin_id isn't empty, it means that the admin is connected
+    if admin_id:
+        try:
+            if request.form['id_materiel'] and request.form['archive'] and request.form['start']:
+                archive = bool(int(request.form['archive']))
+                archive = 1 if archive == False else 0
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                print("inside admin_archiveMateriel   ")
+                tempQuery = '''
+                    UPDATE Materiel SET archive = %s 
+                    WHERE id_materiel = %s
+                '''
+                mycursor.execute(tempQuery, (archive, str(request.form['id_materiel'])))
+                mydb.commit()
+                mycursor.close()
+                if request.form['start'] == str(0):
+                    return redirect(url_for("admin.admin_manageMateriel"))
+                else:
+                     return redirect(url_for('admin.admin_editMateriel', id_materiel=request.form['id_materiel']))
+            else:
+                e = "Erreur : pas d'ID de matériel renseigné pour la suprression"
                 return render_template("pages/admin.html", error=str(e))
         except Exception as e: # If the query fails, render the template with a user-friendly error message
             return render_template("pages/admin.html", error=str(e))
@@ -149,7 +190,7 @@ def admin_editMateriel():
             if 'id_materiel' in request.args:
                 mydb = current_app.config['mydb']
                 mycursor = mydb.cursor()
-                print("inside admin_editMateriel   ")
+                print("inside admin_editMateriel")
                 tempQuery = '''
                     SELECT
                         m.id_materiel,
@@ -157,7 +198,8 @@ def admin_editMateriel():
                         m.modele,
                         m.description,
                         m.image,
-                        m.remarque
+                        m.remarque,
+                        m.archive
                     FROM Materiel m
                     WHERE m.id_materiel = %s;
                 '''
@@ -232,6 +274,7 @@ def admin_get_all_materiel():
                 m.description,
                 m.image,
                 m.remarque,
+                m.archive,
                 (
                     SELECT 
                         CASE
@@ -239,7 +282,9 @@ def admin_get_all_materiel():
                             ELSE NULL
                         END
                     FROM Reservations_Materiel rm
+                    JOIN Reservations r ON rm.id_reservation = r.id_reservation
                     WHERE rm.id_materiel = m.id_materiel
+                    AND ((rm.rendu = 0 OR rm.defaut = 1) AND r.archive = 0)
                 ) AS defaut,
                 (
                     SELECT 
@@ -250,7 +295,7 @@ def admin_get_all_materiel():
                     FROM Reservations r
                     JOIN Reservations_Materiel rm ON r.id_reservation = rm.id_reservation
                     WHERE rm.id_materiel = m.id_materiel
-                    AND (rm.rendu = 0 OR rm.manquant = 1 OR rm.defaut = 1)
+                    AND ((rm.rendu = 0 OR rm.defaut = 1) AND r.archive = 0)
                 ) AS dates_debut,
                 (
                     SELECT 
@@ -261,7 +306,7 @@ def admin_get_all_materiel():
                     FROM Reservations r
                     JOIN Reservations_Materiel rm ON r.id_reservation = rm.id_reservation
                     WHERE rm.id_materiel = m.id_materiel
-                    AND (rm.rendu = 0 OR rm.manquant = 1 OR rm.defaut = 1)
+                    AND ((rm.rendu = 0 OR rm.defaut = 1) AND r.archive = 0)
                 ) AS dates_fin,
                 (
                     SELECT 
@@ -270,7 +315,9 @@ def admin_get_all_materiel():
                             ELSE NULL
                         END
                     FROM Reservations_Materiel rm
+                    JOIN Reservations r ON rm.id_reservation = r.id_reservation
                     WHERE rm.id_materiel = m.id_materiel
+                    AND ((rm.rendu = 0 OR rm.defaut = 1) AND r.archive = 0)
                 ) AS id_reservation
             FROM Materiel m;
             ''')
@@ -282,45 +329,204 @@ def admin_get_all_materiel():
     except Exception as e: # Raise an exception if the request fails. This allows us to display the error message to the user.
         print(e)
         raise Exception("Erreur : impossible de récupérer la liste de matériel") from e
+
+
+#####################
+# manageReservation #
+#####################
+
+@admin.route("/managereservations/")
+def admin_managereservations():
+    admin_id = session.get("admin_id")
+    if admin_id:
+        try:
+            reservation_list = admin_get_all_reservation()
+            return render_template("pages/admin_manageReservation.html", reservation_list=reservation_list)
+        except Exception as e:
+            return render_template("pages/admin.html", error=str(e))
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+
+@admin.route("/managereservation/")
+@admin.route("/managereservation/?id=<int:id_reservation>")
+def admin_managereservation(id_reservation=None):
+    admin_id = session.get("admin_id")
+    if admin_id:
+        try:
+            reservation_data = admin_get_reservation_by_id(id_reservation)
+            projet_data= admin_get_projet_in_reservation(id_reservation)
+            contact_data=admin_get_all_contacts_in_reservation(id_reservation)
+            materiel_data = admin_get_all_materiel_in_reservation(id_reservation)
+            print(reservation_data)
+            return render_template("pages/admin_editReservation.html", reservation_data=reservation_data, projet_data=projet_data, contact_data = contact_data, materiel_data=materiel_data)
+        except Exception as e:
+            return render_template("pages/admin.html", error=str(e))
+    else:
+        return redirect(url_for("admin.admin_connexion"))
     
+@admin.route("/managereservation/deletereservation/<int:id_reservation>", methods=['DELETE'])
+def admin_deletereservation(id_reservation=None):
+    admin_id = session.get("admin_id")
+    if admin_id:
+        try:
+            print(id_reservation)
+            if id_reservation:
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                tempQuery = '''DELETE FROM Reservations_Materiel WHERE id_reservation = %s;'''
+                mycursor.execute(tempQuery, (id_reservation,))
+                tempQuery = '''DELETE FROM Contacts WHERE id_reservation = %s;'''
+                mycursor.execute(tempQuery, (id_reservation,))
+                tempQuery = '''DELETE FROM Projets WHERE id_reservation = %s;'''
+                mycursor.execute(tempQuery, (id_reservation,))
+                mydb.commit()
+                tempQuery = '''DELETE FROM Reservations WHERE id_reservation = %s;'''
+                mycursor.execute(tempQuery, (id_reservation,))
+                mydb.commit()
+                mycursor.close()
+                return {"message": "Réservation supprimée avec succès !"}
+            else:
+                return {"error": "Erreur : pas d'ID de matériel renseigné pour la suppression"}
+        except Exception as e:
+            return {"error": e}
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+    
+@admin.route("/managereservation/archivereservation/<int:id_reservation>", methods=['UPDATE'])
+def admin_archivereservation(id_reservation=None):
+    admin_id = session.get("admin_id")
+    if admin_id:
+        try:
+            if id_reservation:
+                # archive = bool(int(request.form['archive']))
+                # archive = 1 if archive == False else 0
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                print("inside admin_archiveReservation   ")
+                tempQuery = '''UPDATE Reservations SET archive = 1 WHERE id_reservation = %s'''
+                mycursor.execute(tempQuery, (id_reservation,))
+                mydb.commit()
+                mycursor.close()
+                return {"message": "Réservation archivée avec succès !"}
+            else:
+                return {"error": "Erreur : pas d'ID de matériel renseigné pour archiver"}
+        except Exception as e:
+            return {"error": e}
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+
 
 def admin_get_all_reservation():
     try:
         mydb = current_app.config['mydb']
         mycursor = mydb.cursor()
-        print("inside admin_get_all_reservation  ")
-        # For performance and code maintainability reasons, it's better to specify the fields to SELECT rather than using "SELECT *"
-        mycursor.execute('''SELECT id_reservation, date_debut, date_fin, sortie, date_restitution, retour_complet, retour_incomplet FROM Reservations ORDER BY date_debut
+        mycursor.execute('''
+            SELECT
+                id_reservation, date_debut, date_fin, sortie, date_restitution, retour_complet, archive
+            FROM
+                Reservations
+            ORDER BY
+                date_debut
             ''')
         rows = mycursor.fetchall()
-        # Convert the returned tuples into a well-organized dict with named properties
         reservation_list = [dict(zip(mycursor.column_names, row)) for row in rows]
         mycursor.close()
         return reservation_list
-    except Exception as e: # Raise an exception if the request fails. This allows us to display the error message to the user.
+    except Exception as e:
         print(e)
         raise Exception("Erreur : impossible de récupérer la liste de réservations") from e
 
 
+def admin_get_reservation_by_id(id):
+    try:
+        mydb = current_app.config['mydb']
+        mycursor = mydb.cursor()
+        tempQuery = '''
+            SELECT
+                id_reservation, date_debut, date_fin, sortie, date_restitution, retour_complet, archive
+            FROM
+                Reservations
+            WHERE
+                id_reservation = %s
+            '''
+        mycursor.execute(tempQuery, (id, ))
+        rows = mycursor.fetchall()
+        reservation = [dict(zip(mycursor.column_names, row)) for row in rows]
+        mycursor.close()
+        return reservation[0]
+    except Exception as e:
+        print(e)
+        raise Exception("Erreur : impossible de récupérer les données actuelles de la réservation") from e
+    
+def admin_get_projet_in_reservation(id):
+    try:
+        mydb = current_app.config['mydb']
+        mycursor = mydb.cursor()
+        tempQuery = '''
+            SELECT
+                id_projet, id_reservation, nom, description, participants
+            FROM
+                Projets
+            WHERE
+                id_reservation = %s
+            '''
+        mycursor.execute(tempQuery, (id, ))
+        rows = mycursor.fetchall()
+        projet_data = [dict(zip(mycursor.column_names, row)) for row in rows]
+        mycursor.close()
+        return projet_data[0]
+    except Exception as e:
+        print(e)
+        # raise Exception("Erreur : impossible de récupérer les données actuelles du projet") from e
 
-@admin.route("/manageReservation/")
-def admin_manageReservation():
-    admin_id = session.get("admin_id")
-    # If the admin_id isn't empty, it means that the admin is connected
-    if admin_id:
-        try:
-            reservation_list = admin_get_all_reservation()
-            return render_template("pages/admin_manageReservation.html", reservation_list=reservation_list)
-        except Exception as e: # If the query fails, render the template with a user-friendly error message
-            return render_template("pages/admin.html", error=str(e))
-    # If it's empty, it means that the admin isn't connected
-    # If so, redirect to the admin connection page
-    else:
-        return redirect(url_for("admin.admin_connexion"))
+def admin_get_all_contacts_in_reservation(id):
+    try:
+        mydb = current_app.config['mydb']
+        mycursor = mydb.cursor()
+        tempQuery ='''
+            SELECT
+                id_contact, id_reservation, nom, prenom, email, discord, telephone, autre
+            FROM
+                Contacts
+            WHERE 
+                id_reservation = %s
+            '''
+        mycursor.execute(tempQuery, (id, ))
+        rows = mycursor.fetchall()
+        contact_data = [dict(zip(mycursor.column_names, row)) for row in rows]
+        mycursor.close()
+        return contact_data
+    except Exception as e:
+        print(e)
+        raise Exception("Erreur : impossible de récupérer la liste de contacts liée à la réservation") from e
+    
 
+def admin_get_all_materiel_in_reservation(id):
+    try:
+        mydb = current_app.config['mydb']
+        mycursor = mydb.cursor()
+        tempQuery ='''
+            SELECT
+                id_materiel, id_reservation, rendu, defaut, type, modele
+            FROM
+                Materiel
+            NATURAL JOIN
+                Reservations_Materiel
+            WHERE 
+                id_reservation = %s
+            '''
+        mycursor.execute(tempQuery, (id, ))
+        rows = mycursor.fetchall()
+        materiel_data = [dict(zip(mycursor.column_names, row)) for row in rows]
+        mycursor.close()
+        return materiel_data
+    except Exception as e:
+        print(e)
+        raise Exception("Erreur : impossible de récupérer la liste de contacts liée à la réservation") from e
+    
 
-@admin.route("/manageReservation/deleteReservation", methods=['POST'])
-def admin_deleteReservation():
+@admin.route("/managereservation/updateReservation", methods=['POST'])
+def admin_updateReservation():
     admin_id = session.get("admin_id")
     # If the admin_id isn't empty, it means that the admin is connected
     if admin_id:
@@ -328,51 +534,25 @@ def admin_deleteReservation():
             if request.form['id_reservation']:
                 mydb = current_app.config['mydb']
                 mycursor = mydb.cursor()
-                print("inside admin_deleteReservation   ")
-                tempQuery = '''DELETE FROM Contacts WHERE id_reservation= %s; DELETE FROM Projets WHERE id_reservation = %s; DELETE FROM Reservations WHERE id_reservation = %s; '''
-                mycursor.execute(tempQuery, (request.form['id_reservation'],request.form['id_reservation'], request.form['id_reservation']), multi=True)
+                print("inside admin_updateReservation")
+                tempQuery = '''
+                        UPDATE Reservation SET date_debut = %s, date_fin = %s, date_restitution = %s, sortie = %s, date_restitution = %s, retour_complet = %s, retour_incomplet =%s
+                        WHERE id_reservation = %s
+                    '''
+                sortie_value = 1 if 'sortie' in request.form else 0
+                retour_complet_value = 1 if 'retour_complet' in request.form else 0
+                retour_incomplet_value = 1 if 'retour_incomplet' in request.form else 0
+                mycursor.execute(tempQuery, (str(request.form['date_debut']), str(request.form['date_fin']), str(request.form['date_restitution']), sortie_value, str(request.form['date_restitution']),retour_complet_value,retour_incomplet_value, str(request.form['id_reservation'])))
                 mydb.commit()
                 mycursor.close()
-                return redirect(url_for("admin.admin_manageReservation"))
+                return redirect(url_for('admin.admin_editReservation', id_reservation=request.form['id_reservation']))
             else:
-                e = "Erreur : pas d'ID de réservation renseigné pour la suprression"
+                e = "Erreur : pas d'ID de reservation renseigné pour la mise à jour"
                 return render_template("pages/admin.html", error=str(e))
+            
         except Exception as e: # If the query fails, render the template with a user-friendly error message
-            return render_template("pages/admin.html", error=str(e))
+                return render_template("pages/admin.html", error=str(e))
     # If it's empty, it means that the admin isn't connected
     # If so, redirect to the admin connection page
     else:
         return redirect(url_for("admin.admin_connexion"))
-    
-# def admin_get_one_reservation(reservation_id):
-#     try:
-#         mydb = current_app.config['mydb']
-#         mycursor = mydb.cursor()
-#         print("inside admin_get_one_reservation")
-#         mycursor.execute('''
-#             SELECT id_reservation, date_debut, date_fin, sortie, date_restitution, retour_complet, retour_incomplet
-#             FROM Reservations
-#             WHERE id_reservation = %s
-#             ''', (reservation_id,))
-#         row = mycursor.fetchone()
-#         mycursor.close()
-        
-#         if row:
-#             reservation = dict(zip(mycursor.column_names, row))
-#             return reservation
-#         else:
-#             raise Exception("Réservation introuvable")
-#     except Exception as e:
-#         print(e)
-#         raise Exception("Erreur : impossible de récupérer la réservation") from e
-
-
-
-# @admin.route("/manageReservation/detailsReservation/<int:id_reservation>", methods=['GET', 'POST'])
-# def detailsReservation(id_reservation):
-#     try:
-#         reservation = admin_get_one_reservation(id_reservation)
-#         return render_template('detailsReservation.html', reservation=reservation)
-#     except Exception as e:
-#         print(e)
-#         return redirect(url_for('admin.manageReservation'))
