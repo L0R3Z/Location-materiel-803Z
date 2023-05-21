@@ -88,12 +88,12 @@ def admin_addMateriel():
                 print("inside admin_addMateriel  ")
                 if request.form['image']:
                     tempQuery = '''INSERT INTO Materiel(type, modele, description, image, remarque) 
-                    VALUES (%s, %s, %s, %s, %s, %s)'''
+                    VALUES (%s, %s, %s, %s, %s)'''
                     mycursor.execute(tempQuery, (str(request.form['type']), str(request.form['modele']), str(request.form['description']), str(request.form['image']), str(request.form['remarque'])))
                 # Case when no image url is send
                 else:
                     tempQuery = '''INSERT INTO Materiel(type, modele, description, remarque) 
-                    VALUES (%s, %s, %s, %s, %s)'''
+                    VALUES (%s, %s, %s, %s)'''
                     mycursor.execute(tempQuery, (str(request.form['type']), str(request.form['modele']), str(request.form['description']), str(request.form['remarque'])))
                 mydb.commit()
                 mycursor.close()
@@ -118,13 +118,97 @@ def admin_deleteMateriel():
                 mydb = current_app.config['mydb']
                 mycursor = mydb.cursor()
                 print("inside admin_deleteMateriel   ")
-                tempQuery = '''DELETE FROM Materiel WHERE id_materiel = %s;'''
+                tempQuery = '''
+                    DELETE FROM Reservations_Materiel WHERE id_materiel = %s;
+                '''
+                mycursor.execute(tempQuery, (request.form['id_materiel'],))
+                mydb.commit()
+                tempQuery = '''
+                    DELETE FROM Materiel WHERE id_materiel = %s;
+                '''
                 mycursor.execute(tempQuery, (request.form['id_materiel'],))
                 mydb.commit()
                 mycursor.close()
                 return redirect(url_for("admin.admin_manageMateriel"))
             else:
                 e = "Erreur : pas d'ID de matériel renseigné pour la suprression"
+                return render_template("pages/admin.html", error=str(e))
+        except Exception as e: # If the query fails, render the template with a user-friendly error message
+            return render_template("pages/admin.html", error=str(e))
+    # If it's empty, it means that the admin isn't connected
+    # If so, redirect to the admin connection page
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+
+@admin.route("/manageMateriel/editMateriel", methods=['GET'])
+def admin_editMateriel():
+    admin_id = session.get("admin_id")
+    # If the admin_id isn't empty, it means that the admin is connected
+    if admin_id:
+        try:
+            if 'id_materiel' in request.args:
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                print("inside admin_editMateriel   ")
+                tempQuery = '''
+                    SELECT
+                        m.id_materiel,
+                        m.type,
+                        m.modele,
+                        m.description,
+                        m.image,
+                        m.remarque
+                    FROM Materiel m
+                    WHERE m.id_materiel = %s;
+                '''
+                mycursor.execute(tempQuery, (request.args.get('id_materiel'),))
+                # mydb.commit()
+                materiel_row = mycursor.fetchone()
+                # Convert the returned tuples into a well-organized dict with named properties
+                if materiel_row:
+                    materiel = dict(zip(mycursor.column_names, materiel_row))
+                else:
+                    materiel = None
+                mycursor.close()
+                return render_template("pages/admin_editMateriel.html", materiel=materiel)
+            else:
+                e = "Erreur : pas d'ID de matériel renseigné pour la modification"
+                return render_template("pages/admin.html", error=str(e))
+        except Exception as e: # If the query fails, render the template with a user-friendly error message
+            return render_template("pages/admin.html", error=str(e))
+    # If it's empty, it means that the admin isn't connected
+    # If so, redirect to the admin connection page
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+
+@admin.route("/manageMateriel/updateMateriel", methods=['POST'])
+def admin_updateMateriel():
+    admin_id = session.get("admin_id")
+    # If the admin_id isn't empty, it means that the admin is connected
+    if admin_id:
+        try:
+            if request.form['id_materiel']:
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                print("inside admin_updateMateriel")
+                if request.form['image']:
+                    tempQuery = '''
+                        UPDATE Materiel SET type = %s, modele = %s, description = %s, image = %s, remarque = %s 
+                        WHERE id_materiel = %s
+                    '''
+                    mycursor.execute(tempQuery, (str(request.form['type']), str(request.form['modele']), str(request.form['description']), str(request.form['image']), str(request.form['remarque']), str(request.form['id_materiel'])))
+                # Case when no image url is send
+                else:
+                    tempQuery = '''
+                        UPDATE Materiel SET type = %s, modele = %s, description = %s, image = NULL, remarque = %s 
+                        WHERE id_materiel = %s
+                    '''
+                    mycursor.execute(tempQuery, (str(request.form['type']), str(request.form['modele']), str(request.form['description']), str(request.form['remarque']), str(request.form['id_materiel'])))
+                mydb.commit()
+                mycursor.close()
+                return redirect(url_for('admin.admin_editMateriel', id_materiel=request.form['id_materiel']))
+            else:
+                e = "Erreur : pas d'ID de matériel renseigné pour la mise à jour"
                 return render_template("pages/admin.html", error=str(e))
         except Exception as e: # If the query fails, render the template with a user-friendly error message
             return render_template("pages/admin.html", error=str(e))
@@ -140,8 +224,55 @@ def admin_get_all_materiel():
         mycursor = mydb.cursor()
         print("inside admin_get_all_materiel  ")
         # For performance and code maintainability reasons, it's better to specify the fields to SELECT rather than using "SELECT *"
-        mycursor.execute('''SELECT id_materiel, type, modele, description, image, remarque FROM Materiel
-            ORDER BY type, modele
+        mycursor.execute('''
+            SELECT
+                m.id_materiel,
+                m.type,
+                m.modele,
+                m.description,
+                m.image,
+                m.remarque,
+                (
+                    SELECT 
+                        CASE
+                            WHEN COUNT(*) > 0 THEN GROUP_CONCAT(DISTINCT CASE rm.defaut WHEN true THEN 1 ELSE 0 END ORDER BY rm.id_reservation)
+                            ELSE NULL
+                        END
+                    FROM Reservations_Materiel rm
+                    WHERE rm.id_materiel = m.id_materiel
+                ) AS defaut,
+                (
+                    SELECT 
+                        CASE
+                            WHEN COUNT(*) > 0 THEN GROUP_CONCAT(DISTINCT CONCAT(r.date_debut) ORDER BY r.id_reservation)
+                            ELSE NULL
+                        END
+                    FROM Reservations r
+                    JOIN Reservations_Materiel rm ON r.id_reservation = rm.id_reservation
+                    WHERE rm.id_materiel = m.id_materiel
+                    AND (rm.rendu = 0 OR rm.manquant = 1 OR rm.defaut = 1)
+                ) AS dates_debut,
+                (
+                    SELECT 
+                        CASE
+                            WHEN COUNT(*) > 0 THEN GROUP_CONCAT(DISTINCT CONCAT(r.date_fin) ORDER BY r.id_reservation)
+                            ELSE NULL
+                        END
+                    FROM Reservations r
+                    JOIN Reservations_Materiel rm ON r.id_reservation = rm.id_reservation
+                    WHERE rm.id_materiel = m.id_materiel
+                    AND (rm.rendu = 0 OR rm.manquant = 1 OR rm.defaut = 1)
+                ) AS dates_fin,
+                (
+                    SELECT 
+                        CASE
+                            WHEN COUNT(*) > 0 THEN GROUP_CONCAT(DISTINCT rm.id_reservation ORDER BY rm.id_reservation)
+                            ELSE NULL
+                        END
+                    FROM Reservations_Materiel rm
+                    WHERE rm.id_materiel = m.id_materiel
+                ) AS id_reservation
+            FROM Materiel m;
             ''')
         rows = mycursor.fetchall()
         # Convert the returned tuples into a well-organized dict with named properties
