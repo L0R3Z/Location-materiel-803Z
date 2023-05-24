@@ -239,7 +239,7 @@ def admin_updateMateriel():
                         WHERE id_materiel = %s
                     '''
                     mycursor.execute(tempQuery, (str(request.form['type']), str(request.form['modele']), str(request.form['description']), str(request.form['image']), str(request.form['remarque']), str(request.form['id_materiel'])))
-                # Case when no image url is send
+                # Case when no image url is sent
                 else:
                     tempQuery = '''
                         UPDATE Materiel SET type = %s, modele = %s, description = %s, image = NULL, remarque = %s 
@@ -415,6 +415,42 @@ def admin_archivereservation(id_reservation=None):
     else:
         return redirect(url_for("admin.admin_connexion"))
 
+@admin.route("/managereservation/updateReservation", methods=['POST'])
+def admin_updatereservation():
+    admin_id = session.get("admin_id")
+    # If the admin_id isn't empty, it means that the admin is connected
+    if admin_id:
+        try:
+            if request.form['id_reservation']:
+                print('-------------------')
+                print(request.form)
+
+                sortie_value = 1 if 'sortie' in request.form else 0
+                retour_complet_value = 1 if 'retour_complet' in request.form else 0
+                
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                tempQuery = '''
+                    UPDATE Reservations
+                    SET date_debut = %s, date_fin = %s, date_restitution = %s, sortie = %s, retour_complet = %s
+                    WHERE id_reservation = %s;
+                    '''
+                mycursor.execute(tempQuery, (str(request.form['debut']), str(request.form['fin']), str(request.form['restitution']), sortie_value, retour_complet_value, str(request.form['id_reservation'])))
+                mydb.commit()
+                mycursor.close()
+                print('-------------------')
+                return redirect(url_for('admin.admin_managereservation', id_reservation=request.form['id_reservation']))
+            else:
+                e = "Erreur : pas d'ID de reservation renseigné pour la mise à jour"
+                return render_template("pages/admin.html", error=str(e))
+            
+        except Exception as e: # If the query fails, render the template with a user-friendly error message
+            print(e)
+            return render_template("pages/admin.html", error=str(e))
+    # If it's empty, it means that the admin isn't connected
+    # If so, redirect to the admin connection page
+    else:
+        return redirect(url_for("admin.admin_connexion"))
 
 def admin_get_all_reservation():
     try:
@@ -523,36 +559,3 @@ def admin_get_all_materiel_in_reservation(id):
     except Exception as e:
         print(e)
         raise Exception("Erreur : impossible de récupérer la liste de contacts liée à la réservation") from e
-    
-
-@admin.route("/managereservation/updateReservation", methods=['POST'])
-def admin_updateReservation():
-    admin_id = session.get("admin_id")
-    # If the admin_id isn't empty, it means that the admin is connected
-    if admin_id:
-        try:
-            if request.form['id_reservation']:
-                mydb = current_app.config['mydb']
-                mycursor = mydb.cursor()
-                print("inside admin_updateReservation")
-                tempQuery = '''
-                        UPDATE Reservation SET date_debut = %s, date_fin = %s, date_restitution = %s, sortie = %s, date_restitution = %s, retour_complet = %s, retour_incomplet =%s
-                        WHERE id_reservation = %s
-                    '''
-                sortie_value = 1 if 'sortie' in request.form else 0
-                retour_complet_value = 1 if 'retour_complet' in request.form else 0
-                retour_incomplet_value = 1 if 'retour_incomplet' in request.form else 0
-                mycursor.execute(tempQuery, (str(request.form['date_debut']), str(request.form['date_fin']), str(request.form['date_restitution']), sortie_value, str(request.form['date_restitution']),retour_complet_value,retour_incomplet_value, str(request.form['id_reservation'])))
-                mydb.commit()
-                mycursor.close()
-                return redirect(url_for('admin.admin_editReservation', id_reservation=request.form['id_reservation']))
-            else:
-                e = "Erreur : pas d'ID de reservation renseigné pour la mise à jour"
-                return render_template("pages/admin.html", error=str(e))
-            
-        except Exception as e: # If the query fails, render the template with a user-friendly error message
-                return render_template("pages/admin.html", error=str(e))
-    # If it's empty, it means that the admin isn't connected
-    # If so, redirect to the admin connection page
-    else:
-        return redirect(url_for("admin.admin_connexion"))

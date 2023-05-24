@@ -117,7 +117,7 @@
                     <!-- We use <table> to display our data because it's a better practice in terms of accessibility (built-in support for screen readers) -->
     
                         <!-- mycursor.execute(tempQuery, (str(request.form['date_debut']), str(request.form['date_fin']), str(request.form['date_restitution']), str(request.form['sortie']),str(request.form['date_restitution']),str(request.form['retour_complet']),str(request.form['retour_incomplet']), str(request.form['id_reservation']))) -->
-                    <form method="POST" action="{{ url_for('admin.admin_managereservation') }}updateReservation">
+                    <form method="POST" action="{{ url_for('admin.admin_updatereservation') }}">
                         <fieldset>
                             <legend>Mettre à jour la réservation</legend>
                             <div>
@@ -143,7 +143,7 @@
                                     {% endif %}
 
                                 </label>
-                                <label>
+                                <!-- <label>
                                     {% if reservation_data.retour_incomplet == 1 %}
                                     <input type="checkbox" name="retour_incomplet" id="checkretourincomplet" 
                                         checked />
@@ -152,7 +152,7 @@
                                     <input type="checkbox" name="retour_incomplet" id="checkretourincomplet" />
                                     Retour incomplet
 
-                                </label>
+                                </label> -->
                             </div>
                             <input type="hidden" name="id_reservation" value="{{ reservation_data.id_reservation }}">
                             <div>
@@ -170,7 +170,7 @@
 
 
         <script>
-            function handleCheckboxChange() {
+            {/* function handleCheckboxChange() {
                 var clickedCheckbox = event.target;
                 var option1Checkbox = document.getElementById("checkretourcomplet");
                 var option2Checkbox = document.getElementById("checkretourincomplet");
@@ -182,7 +182,7 @@
             }
 
             document.getElementById("checkretourcomplet").addEventListener("click", handleCheckboxChange);
-            document.getElementById("checkretourincomplet").addEventListener("click",handleCheckboxChange);
+            document.getElementById("checkretourincomplet").addEventListener("click",handleCheckboxChange); */}
         </script>
 
 
