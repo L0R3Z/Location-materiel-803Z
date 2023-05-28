@@ -1,5 +1,6 @@
 {% extends "./base.html" %}
     {% block content %}
+        <a href="../managereservations">Retour à la liste de réservations</a>
         {% if not reservation_data %}
             <p>Aucune réservation trouvée</p>
         {% else %}
@@ -130,18 +131,21 @@
                             </div>
                             <div>
                                     <label for="sortieinput">Sortie :</label>
-                                    <input type="number" id="sortieInput" name="sortie" value="{{reservation_data.sortie}}">
+                                    {% if reservation_data.sortie == 1 %}
+                                    <input type="checkbox" id="sortieInput" name="sortie"
+                                        checked/>
+                                    {% else %}
+                                    <input type="checkbox" id="sortieInput" name="sortie"/>
+                                    {% endif %}
 
                                 <label>
                                     {% if reservation_data.retour_complet == 1 %}
                                     <input type="checkbox" name="retour_complet" id="checkretourcomplet" 
                                         checked />
-                                    Retour complet
                                     {% else %}
                                     <input type="checkbox" name="retour_complet" id="checkretourcomplet"/>
-                                    Retour complet
                                     {% endif %}
-
+                                    Retour complet
                                 </label>
                                 <!-- <label>
                                     {% if reservation_data.retour_incomplet == 1 %}
