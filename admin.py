@@ -93,7 +93,6 @@ def admin_addMateriel():
             if request.form['type'] and request.form['modele'] and request.form['description']:
                 mydb = current_app.config['mydb']
                 mycursor = mydb.cursor()
-                print("inside admin_addMateriel  ")
                 if request.form['image']:
                     tempQuery = '''INSERT INTO Materiel(type, modele, description, image, remarque) 
                     VALUES (%s, %s, %s, %s, %s)'''
@@ -127,7 +126,6 @@ def admin_archiveMateriel():
                 archive = 1 if archive == False else 0
                 mydb = current_app.config['mydb']
                 mycursor = mydb.cursor()
-                print("inside admin_archiveMateriel   ")
                 tempQuery = '''
                     UPDATE Materiel SET archive = %s 
                     WHERE id_materiel = %s
@@ -158,7 +156,6 @@ def admin_deleteMateriel():
             if request.form['id_materiel']:
                 mydb = current_app.config['mydb']
                 mycursor = mydb.cursor()
-                print("inside admin_deleteMateriel   ")
                 tempQuery = '''
                     DELETE FROM Reservations_Materiel WHERE id_materiel = %s;
                 '''
@@ -190,7 +187,6 @@ def admin_editMateriel():
             if 'id_materiel' in request.args:
                 mydb = current_app.config['mydb']
                 mycursor = mydb.cursor()
-                print("inside admin_editMateriel")
                 tempQuery = '''
                     SELECT
                         m.id_materiel,
@@ -232,7 +228,6 @@ def admin_updateMateriel():
             if request.form['id_materiel']:
                 mydb = current_app.config['mydb']
                 mycursor = mydb.cursor()
-                print("inside admin_updateMateriel")
                 if request.form['image']:
                     tempQuery = '''
                         UPDATE Materiel SET type = %s, modele = %s, description = %s, image = %s, remarque = %s 
@@ -264,7 +259,6 @@ def admin_get_all_materiel():
     try:
         mydb = current_app.config['mydb']
         mycursor = mydb.cursor()
-        print("inside admin_get_all_materiel  ")
         # For performance and code maintainability reasons, it's better to specify the fields to SELECT rather than using "SELECT *"
         mycursor.execute('''
             SELECT
@@ -357,7 +351,6 @@ def admin_managereservation(id_reservation=None):
             projet_data= admin_get_projet_in_reservation(id_reservation)
             contact_data=admin_get_all_contacts_in_reservation(id_reservation)
             materiel_data = admin_get_all_materiel_in_reservation(id_reservation)
-            print(reservation_data)
             return render_template("pages/admin_editReservation.html", reservation_data=reservation_data, projet_data=projet_data, contact_data = contact_data, materiel_data=materiel_data)
         except Exception as e:
             return render_template("pages/admin.html", error=str(e))
@@ -369,7 +362,6 @@ def admin_deletereservation(id_reservation=None):
     admin_id = session.get("admin_id")
     if admin_id:
         try:
-            print(id_reservation)
             if id_reservation:
                 mydb = current_app.config['mydb']
                 mycursor = mydb.cursor()
@@ -402,7 +394,6 @@ def admin_archivereservation(id_reservation=None):
                 # archive = 1 if archive == False else 0
                 mydb = current_app.config['mydb']
                 mycursor = mydb.cursor()
-                print("inside admin_archiveReservation   ")
                 tempQuery = '''UPDATE Reservations SET archive = 1 WHERE id_reservation = %s'''
                 mycursor.execute(tempQuery, (id_reservation,))
                 mydb.commit()
@@ -422,8 +413,6 @@ def admin_updatereservation():
     if admin_id:
         try:
             if request.form['id_reservation']:
-                print(request.form)
-
                 sortie_value = 1 if 'sortie' in request.form else 0
                 retour_complet_value = 1 if 'retour_complet' in request.form else 0
                 

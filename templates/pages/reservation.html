@@ -42,8 +42,6 @@
                 "projet": projet
             }
 
-            console.log(reservationData);
-
             // Give the reservation data to the back
             const response = await fetch("/reservation/makereservation", {
                 method: 'POST',
@@ -54,7 +52,6 @@
             });
             const data = await response.json();
 
-            console.log(data);
             rechercheHandler();
 
             if(data.error) updateErrorMessage(data.error);
