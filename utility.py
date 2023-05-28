@@ -12,8 +12,6 @@ def encrypt_password(passwd):
 def check_password(passwd, hashed_passwd):
     correct_hash = encrypt_password(passwd)
     if(correct_hash == hashed_passwd):
-        print("The password is correct!")
         return 1
     else:
-        print("The password is invalid...")
         return 0

@@ -29,7 +29,6 @@ def makereservation():
 @reservation.route("/searchmateriel", methods=["GET", "POST"])
 def searchmateriel():
     try:
-        print("inside searchmateriel")
         data = request.json
         if data:
             materiel = get_searched_materiel(data)
@@ -46,7 +45,6 @@ def get_all_materiel():
     try:
         mydb = current_app.config['mydb']
         mycursor = mydb.cursor()
-        print("inside get_all_materiel  ")
         # For performance and code maintainability reasons, it's better to specify the fields to SELECT rather than using "SELECT *"
         mycursor.execute('''SELECT id_materiel, type, modele, description, image, remarque FROM Materiel
             ORDER BY type, modele
@@ -103,7 +101,6 @@ def get_searched_materiel(parameters):
         if (parameters["type"] or parameters["type"]=="") and (parameters["dispo"] or parameters["dispo"]==0):
             mydb = current_app.config['mydb']
             mycursor = mydb.cursor()
-            print("inside get_searched_materiel")
             # For performance and code maintainability reasons, it's better to specify the fields to SELECT rather than using "SELECT *"
             tempQuery = '''
                 SELECT id_materiel, type, modele, description, image, remarque, disponible, date_retour
@@ -133,7 +130,6 @@ def get_searched_materiel(parameters):
                     WHERE ((sub.type = %s) OR %s = "") AND ((%s = 1 AND disponible = 1) OR %s = 0);
                     '''
             mycursor.execute(tempQuery, (str(parameters["type"]), str(parameters["type"]), str(parameters["dispo"]), str(parameters["dispo"])))
-            print("Recherche effectuée avec succès!")
             rows = mycursor.fetchall()
             # Convert the returned tuples into a well-organized dict with named properties
             materiel_list = [dict(zip(mycursor.column_names, row)) for row in rows]
@@ -180,7 +176,6 @@ def insert_reservation(mycursor, dates):
                     tempQuery = '''INSERT INTO Reservations(date_debut, date_fin) VALUES
                         (%s, %s)'''
                     mycursor.execute(tempQuery, (str(dates["debut"]), str(dates["fin"])))
-                    print("réservation insérée avec succès!")
                 except Exception as e:
                     print(e)
                     raise Exception("Erreur lors de l'insertion de la réservation") from e
@@ -202,7 +197,6 @@ def insert_reservation_materiel(mycursor, materiel, reservation_id):
                 tempQuery = '''INSERT INTO Reservations_Materiel(id_reservation, id_materiel)
                 VALUES (%s, %s)'''
                 mycursor.execute(tempQuery, (reservation_id, matos))
-                print("matériel de réservation inséré avec succès!")
             except Exception as e:
                 print(e)
                 raise Exception("Erreur lors de l'insertion du matériel à réserver") from e
@@ -224,7 +218,6 @@ def insert_contacts(mycursor, contacts, reservation_id):
                     tempQuery = '''INSERT INTO Contacts(id_reservation, nom, prenom, email, discord, telephone, autre)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)'''
                     mycursor.execute(tempQuery, (reservation_id, str(contact["nom"]), str(contact["prenom"]), str(contact["email"]), str(contact["discord"]), str(contact["telephone"]), str(contact["autre"])))
-                    print("contacts insérés avec succès!")
                 except Exception as e:
                     print(e)
                     raise Exception("Erreur lors de l'insertion des contacts") from e
@@ -244,7 +237,6 @@ def insert_projet(mycursor, projet, reservation_id):
                 tempQuery = '''INSERT INTO Projets(id_reservation, nom, description, participants)
                     VALUES (%s, %s, %s, %s)'''
                 mycursor.execute(tempQuery, (reservation_id, str(projet["nom"]), str(projet["description"]), str(projet["participants"])))
-                print("projet inséré avec succès!")
             except Exception as e:
                 print(e)
                 raise Exception("Erreur lors de l'insertion du projet") from e
