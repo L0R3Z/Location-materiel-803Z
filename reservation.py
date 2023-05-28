@@ -145,7 +145,6 @@ def get_searched_materiel(parameters):
         print(e)
         raise Exception(e)
 
-# A FINIR / OPTIMISER / FACTORISER !!!
 def insert_all_data(data):
     mydb = current_app.config['mydb']
     mycursor = mydb.cursor()
@@ -169,12 +168,12 @@ def insert_all_data(data):
 
 # Check and insert the data into the Reservations table
 def insert_reservation(mycursor, dates):
-    # Vérifier si dates.debut et dates.fin ont été renseignés
+    # Check if dates.debut and dates.fin exists
     if dates["debut"] and dates["fin"]:
-        # Vérifier si dates.debut est au moins supérieure ou égale à la date du jour
+        # Check if dates.debut is equal or greater to today's date
         debut = datetime.strptime(dates["debut"], "%Y-%m-%d").date()
         if debut >= date.today():
-            # Vérifier si dates.fin est au moins supérieure ou égale à dates.debut
+            # Check if dates.fin is equal or greater to dates.debut
             fin = datetime.strptime(dates["fin"], "%Y-%m-%d").date()
             if fin >= debut:
                 try:
@@ -198,8 +197,7 @@ def insert_reservation_materiel(mycursor, materiel, reservation_id):
     if len(materiel) > 0:
         # Insert the reservations_materiel for each piece of equipment
         for matos in materiel:
-            # CHECK IF MATOS IS AVAILABLE!!!!!!
-            # ...
+            # Need to check if matos is available
             try:
                 tempQuery = '''INSERT INTO Reservations_Materiel(id_reservation, id_materiel)
                 VALUES (%s, %s)'''

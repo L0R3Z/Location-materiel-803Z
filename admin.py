@@ -422,7 +422,6 @@ def admin_updatereservation():
     if admin_id:
         try:
             if request.form['id_reservation']:
-                print('-------------------')
                 print(request.form)
 
                 sortie_value = 1 if 'sortie' in request.form else 0
@@ -438,7 +437,6 @@ def admin_updatereservation():
                 mycursor.execute(tempQuery, (str(request.form['debut']), str(request.form['fin']), str(request.form['restitution']), sortie_value, retour_complet_value, str(request.form['id_reservation'])))
                 mydb.commit()
                 mycursor.close()
-                print('-------------------')
                 return redirect(url_for('admin.admin_managereservation', id_reservation=request.form['id_reservation']))
             else:
                 e = "Erreur : pas d'ID de reservation renseigné pour la mise à jour"
@@ -461,6 +459,8 @@ def admin_get_all_reservation():
                 id_reservation, date_debut, date_fin, sortie, date_restitution, retour_complet, archive
             FROM
                 Reservations
+            WHERE
+                archive = 0
             ORDER BY
                 date_debut
             ''')
