@@ -29,7 +29,7 @@ mycursor.close()
 
 
 # Start the Flask application
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 app.secret_key = "123456789" # Set a secret key to ensure that the session data is enabled and secure
 app.config['mydb'] = mydb
 CORS(app)

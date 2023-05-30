@@ -1,7 +1,7 @@
 {% extends "./base.html" %}
 {% block content %}
-	<p>Hello admin ^^</p>
-	<a href="{{ url_for('admin.admin_manageMateriel') }}">Gérer le matériel</a>
-	<a href="{{ url_for('admin.admin_managereservations') }}">Gérer les réservations</a>
-
+	<h1>Administration</h1>
+	<a href="{{ url_for('admin.admin_manageMateriel') }}"><button>Gérer le matériel</button></a>
+	<a href="{{ url_for('admin.admin_managereservations') }}"><button>Gérer les réservations</button></a>
+	<a href="{{ url_for('admin.admin_logout') }}"><button>Se déconnecter</button></a>
 {% endblock %}

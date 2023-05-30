@@ -78,13 +78,13 @@
                             {% endif %}
                         </td>
                         <td>
-                            <form method="GET" action="{{ url_for('admin.admin_manageMateriel') }}editMateriel">
+                            <form method="GET" action="{{ url_for('admin.admin_editMateriel') }}">
                                 <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
                                 <input type="submit" value="Modifier">
                             </form>
                         </td>
                         <td>
-                            <form method="POST" class="archiveMateriel" action="{{ url_for('admin.admin_manageMateriel') }}archiveMateriel">
+                            <form method="POST" class="archiveMateriel" action="{{ url_for('admin.admin_archiveMateriel') }}">
                                 <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
                                 <input type="hidden" name="archive" value="{{ materiel.archive }}">
                                 <input type="hidden" name="start" value="0">
@@ -96,7 +96,7 @@
                             </form>
                         </td>
                         <td>
-                            <form method="POST" class="deleteMateriel" action="{{ url_for('admin.admin_manageMateriel') }}deleteMateriel">
+                            <form method="POST" class="deleteMateriel" action="{{ url_for('admin.admin_deleteMateriel') }}">
                                 <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
                                 <input type="submit" name="deleteMateriel" value="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer le matériel &quot;{{materiel.modele}}&quot; ?')"/>
                             </form>

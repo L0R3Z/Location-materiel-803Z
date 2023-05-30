@@ -77,7 +77,7 @@
         if (confirm('Êtes-vous sûr de vouloir archiver cette réservation ?')) {
             id = e.target.dataset.id;
             const response = await fetch(`/admin/managereservation/archivereservation/${id}`, {
-                method: 'UPDATE',
+                method: 'PUT',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
                     'Content-Type': 'application/json'
