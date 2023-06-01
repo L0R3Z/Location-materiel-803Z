@@ -1,8 +1,10 @@
 {% extends "./base.html" %}
 {% block content %}
+
+<div class="materiel_admin_page">
 	<a href="../"><button>Retour à l'espace admin</button></a>
 	<h2>Gérer le matériel</h2>
-	<div class="materiel_admin_page">
+	<div class="reservation">
 		<div class="materiel">
 			{% include "./pages/manageMateriel/materiel2.html" %}
 		</div>
@@ -10,4 +12,5 @@
 			{% include "./pages/manageMateriel/addMateriel.html" %}
 		</div>
 	</div>
+</div>
 {% endblock %}

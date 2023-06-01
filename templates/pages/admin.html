@@ -1,7 +1,9 @@
 {% extends "./base.html" %}
 {% block content %}
 	<h1>Administration</h1>
-	<a href="{{ url_for('admin.admin_manageMateriel') }}"><button>Gérer le matériel</button></a>
-	<a href="{{ url_for('admin.admin_managereservations') }}"><button>Gérer les réservations</button></a>
-	<a href="{{ url_for('admin.admin_logout') }}"><button>Se déconnecter</button></a>
+	<div class="admin_login_container">
+		<a href="{{ url_for('admin.admin_manageMateriel') }}"><button>Gérer le matériel</button></a>
+		<a href="{{ url_for('admin.admin_managereservations') }}"><button>Gérer les réservations</button></a>
+		<a href="{{ url_for('admin.admin_logout') }}"><button>Se déconnecter</button></a>
+	</div>
 {% endblock %}

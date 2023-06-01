@@ -25,7 +25,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 150px;
+    height: 120px;
 }
 
 .logo-container img {
@@ -37,7 +37,10 @@ h1 {
     text-transform: uppercase;
     font-family: 'PT Mono', monospace ;
     font-size: 25px;
-    margin: 50px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-left: 50px;
+    margin-right: 50px;
     padding : 5px;
     border: solid 1px #FFF;
 }
@@ -46,7 +49,8 @@ h2 {
     text-transform: uppercase;
     font-family: 'PT Mono', monospace ;
     font-size: 18px;
-    margin: 50px !important;
+    margin-top: 50px;
+    margin-bottom: 50px;
     padding : 5px;
     border: solid 1px #FFF !important;
 }
@@ -61,11 +65,21 @@ p{
     border: solid 1px #FFF;
 }
 
+.home_section{
+    margin-left:50px;
+    margin-right:50px;
+}
+
 .address{
     margin: -45px 50px 30px 100px;
     padding : 5px;
     color: #F9A11A;
     background-color: #333;
+}
+
+.map-container {
+    display: flex;
+    justify-content: center;
 }
 
 nav {
@@ -131,11 +145,15 @@ footer .socials{
     justify-content:space-around;
 }
 
-.reservation_page, .materiel_admin_page{
+.reservation_page, .materiel_admin_page, .reservation_admin_page, .materiel_reservation_page{
     font-family: 'PT Mono', monospace ;
     padding-left: 50px;
     padding-right: 50px;
     padding-bottom: 50px;
+}
+
+.liste_reservation > table > tbody{
+    color:#000;
 }
 
 input {
@@ -166,6 +184,17 @@ button:hover{
     color: #FFF;
 }
 
+.admin_login_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+}
+
+/* .h2indent{
+    margin-left:50px;
+} */
 @media screen and (max-width: 600px) {
     nav {
         display: flex;
