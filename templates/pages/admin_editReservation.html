@@ -1,193 +1,195 @@
 {% extends "./base.html" %}
     {% block content %}
-        <a href="../managereservations"><button>Retour à la liste de réservations</button></a>
-        {% if not reservation_data %}
-            <p>Aucune réservation trouvée</p>
-        {% else %}
-            <div class="reservation_page">
-                <h1> Détails sur la réservation </h1>
-                <ul>
-                    <li><strong>Date début : </strong> {{ reservation_data.date_debut }}</li>
-                    <li><strong>Date fin :</strong> {{ reservation_data.date_fin }} </li>
-                    <li><strong>Sortie :</strong> {{ reservation_data.sortie }} </li>
-                    <li> Date de restitution : {{ reservation_data.date_restitution }} </li>
+        <div class="materiel_reservation_page">
+            <a href="../managereservations"><button>Liste de réservations</button></a>
+            {% if not reservation_data %}
+                <p>Aucune réservation trouvée</p>
+            {% else %}
+                <div class="reservation_page">
+                    <h1> Détails sur la réservation </h1>
+                    <ul>
+                        <li><strong>Date début : </strong> {{ reservation_data.date_debut }}</li>
+                        <li><strong>Date fin :</strong> {{ reservation_data.date_fin }} </li>
+                        <li><strong>Sortie :</strong> {{ reservation_data.sortie }} </li>
+                        <li> Date de restitution : {{ reservation_data.date_restitution }} </li>
 
-                    {% if reservation_data.date_restitution != None %}
-                    <li>
-                        Retour : 
-                        {% if reservation_data.retour_complet== 0 %}
-                        incomplet
-                        {% elif reservation_data.retour_complet== 1 %}
-                        complet
+                        {% if reservation_data.date_restitution != None %}
+                        <li>
+                            Retour : 
+                            {% if reservation_data.retour_complet== 0 %}
+                            incomplet
+                            {% elif reservation_data.retour_complet== 1 %}
+                            complet
+                            {% endif %}
+                        </li>
                         {% endif %}
-                    </li>
+                        <li>Archive : {{ reservation_data.archive }}</li>
+                    </ul>
+
+                    <h2 class="h2indent">Contacts</h2>
+                    {% if not contact_data %}
+                        <p>Pas de contacts </p>
+
+                    {% else %}
+
+
+                        {% set contacts =contact_data %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Email</th>
+                                    <th>Discord</th>
+                                    <th>Telephone</th>
+                                    <th>Autre</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {% for contact in contacts %}
+                                <tr style="background-color: lightgrey; color:black">
+                                    <td>{{contact.nom}}</td> 
+                                    <td>{{contact.prenom}}</td> 
+                                    <td>{{contact.email}}</td> 
+                                    <td>{{contact.discord}}</td> 
+                                    <td>{{contact.telephone}}</td> 
+                                    <td>{{contact.autre}}</td> 
+
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
                     {% endif %}
-                    <li>Archive : {{ reservation_data.archive }}</li>
-                </ul>
-
-                <h2>Contacts</h2>
-                {% if not contact_data %}
-                    <p>Pas de contacts </p>
-
-                {% else %}
-
-
-                    {% set contacts =contact_data %}
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Prénom</th>
-                                <th>Email</th>
-                                <th>Discord</th>
-                                <th>Telephone</th>
-                                <th>Autre</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            
-                            {% for contact in contacts %}
-                            <tr style="background-color: lightgrey; color:black">
-                                <td>{{contact.nom}}</td> 
-                                <td>{{contact.prenom}}</td> 
-                                <td>{{contact.email}}</td> 
-                                <td>{{contact.discord}}</td> 
-                                <td>{{contact.telephone}}</td> 
-                                <td>{{contact.autre}}</td> 
-
-                            </tr>
-                            {% endfor %}
-
-                        </tbody>
-
-                    </table>
-                {% endif %}
+                        
                     
-                
-                <h2>Matériel réservé</h2>
+                    <h2 class="h2indent">Matériel réservé</h2>
 
-                {% if not materiel_data %}
-                    <p>Le materiel n'a pas été trouvé </p>
-                {% else %}
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Modele</th>
-                                <th>Rendu</th>
-                                <th>Defaut</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            
-                            {% for materiel in materiel_data %}
-                            <tr style="background-color: lightgrey; color:black">
-                                <td>{{materiel.type}}</td> 
-                                <td>{{materiel.modele}}</td> 
-                                <td>
-                                    {% if materiel.rendu== 0 %}
-                                    non
-                                    {% elif materiel.rendu== 1 %}
-                                    oui
-                                    {% endif %}
-                                </td> 
-                                <td>{{materiel.defaut}}</td> 
-                            </tr>
-                            {% endfor %}
+                    
 
-                        </tbody>
+                        {% if not materiel_data %}
+                            <p>Le materiel n'a pas été trouvé </p>
+                        {% else %}
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Modele</th>
+                                        <th>Rendu</th>
+                                        <th>Defaut</th>
+                                        <th>Mettre à jour</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    {% for materiel in materiel_data %}
+                                    <form method="POST" action="{{ url_for('admin.admin_updatematerielinreservation') }}">
+                                        <tr style="background-color: lightgrey; color:black">
+                                            <td>{{materiel.type}}</td> 
+                                            <td>{{materiel.modele}}</td> 
+                                            <td>
+                                            {% if materiel.rendu == 1 %}
+                                            <input type="checkbox" id="renduInput" name="rendu"
+                                                checked/>
+                                            {% else %}
+                                            <input type="checkbox" id="renduInput" name="rendu"/>
+                                            {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if materiel.defaut == 1 %}
+                                                <input type="checkbox" id="defautInput" name="defaut"
+                                                    checked/>
+                                                {% else %}
+                                                <input type="checkbox" id="defautInput" name="defaut"/>
+                                                {% endif %}
+                                            </td>
+                                            <td> <input type="hidden" name="id_materiel" value="{{ materiel.id_materiel }}">
+                                                <input type="hidden" name="id_reservation" value="{{ materiel.id_reservation }}">
+                                                <input type="submit" value="Mettre à jour"/></td>
+                                        </tr>
+                                    </form>
+                                    
+                                    {% endfor %}
 
-                    </table>
-                {% endif %}
+                                </tbody>
 
-                <h2> Projet</h2>
-                {% if not projet_data %}
-                <p>Pas de projet lié</p>
-                {% else %}
-                <ul>
-                    <li> Nom du projet : {{ projet_data.nom }}</li>
-                    <li> Description : {{ projet_data.description }}</li>
-                    <li> Participants : {{ projet_data.participants }}</li>
-                </ul>
-                {% endif %}
-                
+                            </table>
+                        {% endif %}
+                        
+                    
+
+                    <h2 class="h2indent"> Projet</h2>
+                    {% if not projet_data %}
+                    <p>Pas de projet lié</p>
+                    {% else %}
+                    <ul>
+                        <li> Nom du projet : {{ projet_data.nom }}</li>
+                        <li> Description : {{ projet_data.description }}</li>
+                        <li> Participants : {{ projet_data.participants }}</li>
+                    </ul>
+                    {% endif %}
+                    
 
 
-                <div class="updateMateriel__container">
-                    <h3>Mettre à jour la réservation</h3>
-                    <!-- We use <table> to display our data because it's a better practice in terms of accessibility (built-in support for screen readers) -->
-    
-                        <!-- mycursor.execute(tempQuery, (str(request.form['date_debut']), str(request.form['date_fin']), str(request.form['date_restitution']), str(request.form['sortie']),str(request.form['date_restitution']),str(request.form['retour_complet']),str(request.form['retour_incomplet']), str(request.form['id_reservation']))) -->
-                    <form method="POST" action="{{ url_for('admin.admin_updatereservation') }}">
-                        <fieldset>
-                            <legend>Mettre à jour la réservation</legend>
-                            <div>
-                                <label for="inputebut">Date debut : </label>
-                                <input type="date" name="debut" id="inputdebut" value="{{ reservation_data.date_debut }}" required>
-                                <label for="inputebut">Date fin : </label>
-                                <input type="date" name="fin" id="inputfin" value="{{ reservation_data.date_fin }}" required>
-                                <label for="inputebut">Date restitution : </label>
-                                <input type="date" name="restitution" id="inputrestitution" value="{{ reservation_data.date_restitution}}">
-                            </div>
-                            <div>
-                                    <label for="sortieinput">Sortie :</label>
-                                    {% if reservation_data.sortie == 1 %}
-                                    <input type="checkbox" id="sortieInput" name="sortie"
-                                        checked/>
-                                    {% else %}
-                                    <input type="checkbox" id="sortieInput" name="sortie"/>
-                                    {% endif %}
+                    <div class="updateMateriel__container">
+                        <h3>Mettre à jour la réservation</h3>
+                        <!-- We use <table> to display our data because it's a better practice in terms of accessibility (built-in support for screen readers) -->
 
-                                <label>
-                                    {% if reservation_data.retour_complet == 1 %}
-                                    <input type="checkbox" name="retour_complet" id="checkretourcomplet" 
-                                        checked />
-                                    {% else %}
-                                    <input type="checkbox" name="retour_complet" id="checkretourcomplet"/>
-                                    {% endif %}
-                                    Retour complet
-                                </label>
-                                <!-- <label>
-                                    {% if reservation_data.retour_incomplet == 1 %}
-                                    <input type="checkbox" name="retour_incomplet" id="checkretourincomplet" 
-                                        checked />
-                                    Retour incomplet
-                                    {% else %}
-                                    <input type="checkbox" name="retour_incomplet" id="checkretourincomplet" />
-                                    Retour incomplet
+                        <form method="POST" action="{{ url_for('admin.admin_updatereservation') }}">
+                            <fieldset>
+                                <legend>Mettre à jour la réservation</legend>
+                                <div>
+                                    <label for="inputebut">Date debut : </label>
+                                    <input type="date" name="debut" id="inputdebut" value="{{ reservation_data.date_debut }}" required>
+                                    <label for="inputebut">Date fin : </label>
+                                    <input type="date" name="fin" id="inputfin" value="{{ reservation_data.date_fin }}" required>
+                                    <label for="inputebut">Date restitution : </label>
+                                    <input type="date" name="restitution" id="inputrestitution" value="{{ reservation_data.date_restitution}}">
+                                </div>
+                                <div>
+                                        <label for="sortieinput">Sortie :</label>
+                                        {% if reservation_data.sortie == 1 %}
+                                        <input type="checkbox" id="sortieInput" name="sortie"
+                                            checked/>
+                                        {% else %}
+                                        <input type="checkbox" id="sortieInput" name="sortie"/>
+                                        {% endif %}
 
-                                </label> -->
-                            </div>
-                            <input type="hidden" name="id_reservation" value="{{ reservation_data.id_reservation }}">
-                            <div>
-                                <input type="submit" value="Mettre à jour"/>
-                            </div>
-                        </fieldset>
-                    </form>
+                                    <label>
+                                        {% if reservation_data.retour_complet == 1 %}
+                                        <input type="checkbox" name="retour_complet" id="checkretourcomplet" 
+                                            checked />
+                                        {% else %}
+                                        <input type="checkbox" name="retour_complet" id="checkretourcomplet"/>
+                                        {% endif %}
+                                        Retour complet
+                                    </label>
+                                    <!-- <label>
+                                        {% if reservation_data.retour_incomplet == 1 %}
+                                        <input type="checkbox" name="retour_incomplet" id="checkretourincomplet" 
+                                            checked />
+                                        Retour incomplet
+                                        {% else %}
+                                        <input type="checkbox" name="retour_incomplet" id="checkretourincomplet" />
+                                        Retour incomplet
+
+                                    </label> -->
+                                </div>
+                                <input type="hidden" name="id_reservation" value="{{ reservation_data.id_reservation }}">
+                                <div>
+                                    <input type="submit" value="Mettre à jour"/>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+
                 </div>
 
-            </div>
-
-            
+        </div>
         <!-- {% endif %} -->
 
-
-
-        <script>
-            {/* function handleCheckboxChange() {
-                var clickedCheckbox = event.target;
-                var option1Checkbox = document.getElementById("checkretourcomplet");
-                var option2Checkbox = document.getElementById("checkretourincomplet");
-                if (clickedCheckbox === option1Checkbox && option1Checkbox.checked) {
-                option2Checkbox.checked = false;
-                } else if (clickedCheckbox === option2Checkbox && option2Checkbox.checked) {
-                option1Checkbox.checked = false;
-                }
-            }
-
-            document.getElementById("checkretourcomplet").addEventListener("click", handleCheckboxChange);
-            document.getElementById("checkretourincomplet").addEventListener("click",handleCheckboxChange); */}
-        </script>
 
 
 {% endif %}

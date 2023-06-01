@@ -1,6 +1,8 @@
 from flask import Flask, Blueprint, jsonify, session, render_template, redirect, url_for, request, current_app
 from utility import encrypt_password
 
+import json 
+
 admin = Blueprint("admin", __name__)
 
 #########
@@ -424,6 +426,46 @@ def admin_updatereservation():
                     WHERE id_reservation = %s;
                     '''
                 mycursor.execute(tempQuery, (str(request.form['debut']), str(request.form['fin']), str(request.form['restitution']), sortie_value, retour_complet_value, str(request.form['id_reservation'])))
+                mydb.commit()
+                mycursor.close()
+                return redirect(url_for('admin.admin_managereservation', id_reservation=request.form['id_reservation']))
+            else:
+                e = "Erreur : pas d'ID de reservation renseigné pour la mise à jour"
+                return render_template("pages/admin.html", error=str(e))
+            
+        except Exception as e: # If the query fails, render the template with a user-friendly error message
+            print(e)
+            return render_template("pages/admin.html", error=str(e))
+    # If it's empty, it means that the admin isn't connected
+    # If so, redirect to the admin connection page
+    else:
+        return redirect(url_for("admin.admin_connexion"))
+    
+
+@admin.route("/managereservation/updatematerielinreservation", methods=['POST'])
+def admin_updatematerielinreservation():
+    admin_id = session.get("admin_id")
+    # If the admin_id isn't empty, it means that the admin is connected
+    if admin_id:
+        try:
+            print(request.form)
+            if request.form['id_reservation'] and request.form['id_materiel']:
+                # rendu_value = 1 if 'rendu' in request.form else 0
+                # defaut_value = 1 if 'defaut' in request.form else 0
+
+                rendu_value = 1 if request.form['rendu'] == 'on' else 0
+                defaut_value = 1 if request.form['defaut'] == 'on' else 0
+                print(rendu_value)
+                print(defaut_value)
+                
+                mydb = current_app.config['mydb']
+                mycursor = mydb.cursor()
+                tempQuery = '''
+                    UPDATE Reservations_Materiel
+                    SET rendu = %s, defaut = %s
+                    WHERE id_materiel = %s AND id_reservation=%s;
+                    '''
+                mycursor.execute(tempQuery, (rendu_value, defaut_value, str(request.form['id_materiel']), str(request.form['id_reservation'])))
                 mydb.commit()
                 mycursor.close()
                 return redirect(url_for('admin.admin_managereservation', id_reservation=request.form['id_reservation']))
